@@ -27,7 +27,7 @@ export function GeneratingStep({ state }: { state: WizardState }) {
       </div>
 
       <div className="columns-2 gap-3 sm:columns-3 md:columns-4 xl:columns-5 [&>*]:mb-3 [&>*]:break-inside-avoid">
-        {Array.from({ length: 16 }).map((_, i) => (
+        {Array.from({ length: 30 }).map((_, i) => (
           <motion.div
             key={i}
             initial={{ opacity: 0 }}

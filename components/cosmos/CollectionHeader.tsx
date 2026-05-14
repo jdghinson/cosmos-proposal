@@ -17,7 +17,7 @@ export function CollectionHeader({
   collaborators = [],
 }: Props) {
   return (
-    <header className="flex flex-col items-center px-8 pt-16 text-center">
+    <header className="flex flex-col items-center px-8 pt-16 pb-16 text-center">
       <h1 className="max-w-[840px] text-balance text-[48px] font-medium leading-[110%] tracking-[-0.96px] text-fg">
         {title}
       </h1>
