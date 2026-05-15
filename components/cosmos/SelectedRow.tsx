@@ -7,7 +7,7 @@ import { useCollections } from "@/lib/collections-store";
 
 export function SelectedRow({ highlightId }: { highlightId?: string }) {
   const { collections } = useCollections();
-  const saved = collections.filter((c) => c.source === "ai");
+  const saved = collections.filter((c) => c.source === "ai" && c.id.startsWith("seed-"));
   const scrollerRef = useRef<HTMLDivElement>(null);
   const [canPrev, setCanPrev] = useState(false);
   const [canNext, setCanNext] = useState(true);

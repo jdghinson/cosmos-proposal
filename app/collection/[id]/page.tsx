@@ -58,12 +58,18 @@ export default function CollectionPage() {
       />
 
       {hasImages ? (
-        <CollectionGrid images={collection.imageUrls} />
+        <CollectionGrid images={collection.imageUrls} collectionName={collection.title} />
       ) : (
         <CollectionEmpty brief={collection.brief} />
       )}
 
-      {hasImages && <SeeSimilar brief={collection.brief} />}
+      {hasImages && (
+        <SeeSimilar
+          brief={collection.brief}
+          collectionName={collection.title}
+          collectionThumbnail={collection.imageUrls[0]}
+        />
+      )}
     </main>
   );
 }

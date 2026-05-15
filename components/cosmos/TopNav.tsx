@@ -1,23 +1,37 @@
 "use client";
 
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Logo } from "./Logo";
 import { SearchBar, type SearchScope } from "./SearchBar";
 import { CreateDropdown } from "./CreateDropdown";
+import { CollectionsButton } from "./CollectionsButton";
+import { UserAvatar } from "./UserAvatar";
 
 export function TopNav({ searchScope }: { searchScope?: SearchScope } = {}) {
+  const pathname = usePathname();
+  const isExplore = pathname === "/";
+  const isProfile = pathname === "/profile";
+
   return (
     <div className="relative flex items-center justify-between px-8 py-6">
       <div className="relative z-10 flex items-center gap-1">
-        <button
+        <Link
+          href="/"
           aria-label="Cosmos"
           className="grid h-[54px] w-[54px] place-items-center rounded-full bg-surface text-fg ring-1 ring-inset ring-border"
         >
           <Logo size={22} />
-        </button>
+        </Link>
         <nav className="flex h-[54px] items-center gap-6 rounded-full bg-surface px-8 text-[14px] font-medium ring-1 ring-inset ring-border">
-          <span className="cursor-pointer text-fg-muted hover:text-fg">For You</span>
-          <span className="cursor-pointer text-fg-muted hover:text-fg">Following</span>
-          <span className="cursor-pointer text-fg">Explore</span>
+          <Link href="/" className="cursor-pointer text-fg-muted hover:text-fg">For You</Link>
+          <Link href="/" className="cursor-pointer text-fg-muted hover:text-fg">Following</Link>
+          <Link
+            href="/"
+            className={`cursor-pointer ${isExplore ? "text-fg" : "text-fg-muted hover:text-fg"}`}
+          >
+            Explore
+          </Link>
         </nav>
       </div>
 
@@ -44,26 +58,25 @@ export function TopNav({ searchScope }: { searchScope?: SearchScope } = {}) {
 
         <CreateDropdown />
 
-        <button
-          aria-label="Apps"
-          className="-ml-[2px] grid h-7 w-7 place-items-center rounded-lg bg-surface3 text-fg-muted ring-[1.5px] ring-inset ring-surface hover:text-fg"
-        >
-          <svg width="10" height="11" viewBox="0 0 28 31" fill="currentColor">
-            <circle cx="14" cy="4.5" r="4.5" />
-            <circle cx="14" cy="26.5" r="4.5" />
-            <circle cx="4.5" cy="10" r="4.5" />
-            <circle cx="23.5" cy="21" r="4.5" />
-            <circle cx="23.5" cy="10" r="4.5" />
-            <circle cx="4.5" cy="21" r="4.5" />
-          </svg>
-        </button>
+        <CollectionsButton />
 
         <div className="flex items-center gap-1">
-          <div
-            aria-label="Avatar"
-            className="h-7 w-7 rounded-full"
-            style={{ background: "radial-gradient(circle at 30% 30%, #f7c2a5, #d99172)" }}
-          />
+          <Link
+            href="/profile"
+            aria-label="Profile"
+            className="group relative block h-7 w-7 rounded-full ring-focus"
+          >
+            <UserAvatar size={28} />
+            <span
+              aria-hidden
+              className={`pointer-events-none absolute inset-0 rounded-full ${
+                isProfile ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+              }`}
+              style={{
+                boxShadow: "#FFFFFF 0 0 0 2px inset, #141414 0 0 0 3px inset",
+              }}
+            />
+          </Link>
           <button
             aria-label="Menu"
             className="-mr-1 grid h-7 w-7 place-items-center text-fg-muted hover:text-fg ring-focus"

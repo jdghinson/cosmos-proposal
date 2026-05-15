@@ -27,18 +27,20 @@ const COSMOS_DOTS = [
 export type SearchScope = {
   name: string;
   thumbnail?: string;
+  avatar?: React.ReactNode;
+  placeholder?: string;
 };
 
 export function SearchBar({ scope }: { scope?: SearchScope }) {
   const [open, setOpen] = useState(false);
   const [placeholder, setPlaceholder] = useState(
-    scope ? `Search in ${scope.name}…` : PLACEHOLDERS[3],
+    scope ? scope.placeholder ?? `Search in ${scope.name}…` : PLACEHOLDERS[3],
   );
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (scope) {
-      setPlaceholder(`Search in ${scope.name}…`);
+      setPlaceholder(scope.placeholder ?? `Search in ${scope.name}…`);
       return;
     }
     let i = 0;
@@ -70,7 +72,9 @@ export function SearchBar({ scope }: { scope?: SearchScope }) {
         {scope ? (
           <div className="ml-1 flex h-[38px] items-center gap-1.5 rounded-full bg-bg pl-1 pr-3 ring-1 ring-inset ring-border">
             <div className="h-7 w-7 shrink-0 overflow-hidden rounded-full bg-surface2">
-              {scope.thumbnail ? (
+              {scope.avatar ? (
+                scope.avatar
+              ) : scope.thumbnail ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={scope.thumbnail} alt="" className="h-full w-full object-cover" />
               ) : (

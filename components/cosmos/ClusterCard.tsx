@@ -57,11 +57,11 @@ export function ClusterCard({ cluster, highlight }: Props) {
         <div className="px-1">
           <div className="flex items-center gap-1.5 text-[16px] font-medium leading-[125%] tracking-[-0.32px] text-fg">
             <span className="truncate">{title}</span>
-            {isSaved(cluster) && (
+            {/* {isSaved(cluster) && (
               <span className="rounded-full bg-fg/10 px-1.5 py-0.5 text-[10px] uppercase tracking-wider text-fg-muted">
                 AI
               </span>
-            )}
+            )} */}
           </div>
           <div className="mt-0.5 flex items-center text-[14px] tracking-[-0.28px] text-fg-muted">
             <span className="flex min-w-0 items-center gap-0.5">
