@@ -47,17 +47,18 @@ export function CreateDropdown() {
     <div ref={ref} className="relative">
       <button
         onClick={() => setOpen((v) => !v)}
-        className="grid h-[30px] place-items-center rounded-full bg-fg px-3 text-[14px] font-medium tracking-[-0.28px] text-[#0D0D0D] hover:bg-fg/95 ring-focus"
+        className="grid h-[30px] place-items-center rounded-full bg-fg px-3 text-[14px] font-medium tracking-[-0.28px] text-[#0D0D0D] hover:bg-[#D4D4D4] ring-focus active:scale-[0.97] transition-[background-color,transform] duration-150 ease-out"
       >
         Create
       </button>
       <AnimatePresence>
         {open && (
           <motion.div
-            initial={{ opacity: 0, y: -4 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -4 }}
-            transition={{ duration: 0.16 }}
+            initial={{ opacity: 0, scale: 0.96, y: -4 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.96, y: -4, transition: { duration: 0.12, ease: [0.2, 0.6, 0.2, 1] } }}
+            transition={{ duration: 0.16, ease: [0.2, 0.6, 0.2, 1] }}
+            style={{ transformOrigin: "top right" }}
             className="absolute right-0 top-[calc(100%+8px)] z-40 w-[260px] rounded-md bg-surface p-2 shadow-[0_8px_32px_rgba(0,0,0,0.45)] ring-1 ring-border"
           >
             <DropdownItem

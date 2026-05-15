@@ -83,8 +83,8 @@ export function CollectionsButton() {
         aria-expanded={open}
         className={
           showStack
-            ? "-ml-[2px] grid h-7 w-[34px] place-items-center ring-focus"
-            : "-ml-[2px] grid h-7 w-7 place-items-center rounded-lg bg-surface3 text-fg-muted ring-[1.5px] ring-inset ring-surface hover:text-fg ring-focus"
+            ? "-ml-[2px] grid h-7 w-[34px] place-items-center ring-focus active:scale-[0.97] transition-[background-color,transform] duration-150 ease-out"
+            : "-ml-[2px] grid h-7 w-7 place-items-center rounded-lg bg-surface3 text-fg-muted ring-[1.5px] ring-inset ring-surface hover:text-fg ring-focus active:scale-[0.97] transition-[background-color,transform] duration-150 ease-out"
         }
       >
         {showStack ? (
@@ -97,10 +97,11 @@ export function CollectionsButton() {
       <AnimatePresence>
         {open && (
           <motion.div
-            initial={{ opacity: 0, y: -4 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -4 }}
-            transition={{ duration: 0.16 }}
+            initial={{ opacity: 0, scale: 0.96, y: -4 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.96, y: -4, transition: { duration: 0.12, ease: [0.2, 0.6, 0.2, 1] } }}
+            transition={{ duration: 0.16, ease: [0.2, 0.6, 0.2, 1] }}
+            style={{ transformOrigin: "top right" }}
             className="absolute right-0 top-[calc(100%+12px)] z-40 w-[246px] rounded-[20px] bg-surface p-1 ring-[0.5px] ring-border shadow-[0_1px_8px_rgba(0,0,0,0.5)]"
           >
             <div className="flex items-center gap-2 rounded-2xl px-3 py-4">

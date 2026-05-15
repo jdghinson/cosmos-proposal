@@ -13,7 +13,7 @@ export function GeneratingStep({ state }: { state: WizardState }) {
         <div className="mx-auto mb-3 grid h-12 w-12 place-items-center rounded-full bg-surface ring-1 ring-inset ring-border">
           <motion.div
             animate={{ rotate: 360 }}
-            transition={{ duration: 4, ease: "linear", repeat: Infinity }}
+            transition={{ duration: 1.6, ease: "linear", repeat: Infinity }}
           >
             <Sparkles size={18} className="text-fg" strokeWidth={1.5} />
           </motion.div>

@@ -22,7 +22,7 @@ function ProfileCollectionCard({ collection }: { collection: SavedCollection }) 
   return (
     <Link href={`/collection/${collection.id}`} className="group flex flex-col gap-2">
       <div
-        className="aspect-square overflow-hidden rounded-3xl bg-surface3 ring-[0.5px] ring-inset ring-border transition-transform duration-300 ease-out group-hover:scale-[1.005]"
+        className="aspect-square overflow-hidden rounded-3xl bg-surface3 ring-[0.5px] ring-inset ring-border transition-transform duration-300 ease-out [@media(hover:hover)]:group-hover:scale-[1.005]"
         style={{ boxShadow: "0 2px 12px rgba(0,0,0,0.02), 0 4px 16px rgba(0,0,0,0.1)" }}
       >
         {cover && (

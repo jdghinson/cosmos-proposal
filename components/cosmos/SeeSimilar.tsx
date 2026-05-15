@@ -1,6 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { usePathname, useSearchParams } from "next/navigation";
 import { ChevronDown } from "lucide-react";
 import { resultsForBrief } from "@/lib/mock-data";
 import { SeeSimilarSheet } from "./SeeSimilarSheet";
@@ -15,8 +16,34 @@ export function SeeSimilar({
   collectionThumbnail?: string;
 }) {
   const thumbs = useMemo(() => resultsForBrief(brief).slice(0, 3), [brief]);
-  const [open, setOpen] = useState(false);
+  const pathname = usePathname();
+  const params = useSearchParams();
+  const initiallyOpen = params.get("similar") === "1";
+  const [open, setOpen] = useState(initiallyOpen);
   const [hover, setHover] = useState(false);
+
+  // Keep `?similar=1` in sync with the modal open state so back-navigation
+  // from /element returns here with the modal restored.
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    const has = url.searchParams.get("similar") === "1";
+    if (open && !has) {
+      url.searchParams.set("similar", "1");
+      window.history.replaceState(window.history.state, "", url.pathname + url.search);
+    } else if (!open && has) {
+      url.searchParams.delete("similar");
+      window.history.replaceState(
+        window.history.state,
+        "",
+        url.pathname + (url.search || ""),
+      );
+    }
+  }, [open, pathname]);
+
+  // Sync open state back from the URL when it changes (e.g. browser back).
+  useEffect(() => {
+    setOpen(params.get("similar") === "1");
+  }, [params]);
 
   return (
     <>

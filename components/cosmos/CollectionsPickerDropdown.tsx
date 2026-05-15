@@ -56,10 +56,11 @@ export function CollectionsPickerDropdown({
       {open && (
         <motion.div
           ref={ref}
-          initial={{ opacity: 0, y: -4 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -4 }}
-          transition={{ duration: 0.16 }}
+          initial={{ opacity: 0, scale: 0.96, y: -4 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.96, y: -4, transition: { duration: 0.12, ease: [0.2, 0.6, 0.2, 1] } }}
+          transition={{ duration: 0.16, ease: [0.2, 0.6, 0.2, 1] }}
+          style={{ transformOrigin: `${position === "above" ? "bottom" : "top"} ${align === "right" ? "right" : "left"}` }}
           className={`absolute z-50 flex w-[320px] flex-col gap-2 rounded-[20px] bg-surface p-2 ring-[0.5px] ring-border shadow-[0_1px_8px_rgba(0,0,0,0.5)] ${align === "right" ? "right-0" : "left-0"} ${position === "above" ? "bottom-full mb-2" : "top-full mt-2"}`}
         >
           <div className="flex items-center justify-between gap-2 rounded-xl p-3">
@@ -95,7 +96,7 @@ export function CollectionsPickerDropdown({
             <span className="text-[14px] tracking-[-0.28px] text-fg-muted">Collections</span>
 
             <div className="-mx-3 max-h-[260px] overflow-y-auto">
-              <button className="flex w-full items-center justify-between gap-3 rounded-xl p-3 hover:bg-surface2">
+              <button className="flex w-full items-center justify-between gap-3 rounded-xl p-3 hover:bg-surface2 active:scale-[0.97] transition-[background-color,transform] duration-150 ease-out">
                 <span className="flex items-center gap-3">
                   <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-surface3 text-fg-muted">
                     <NewCollectionIcon />

@@ -448,8 +448,41 @@ export const exploreCategories = [
   "Weddings",
 ];
 
-export const recentSearches = ["brutalism typography posters", "webinar poster", "typography poster"];
-export const recentColors = ["#57612C", "#CB1E1E", "#601515", "#6BA661", "#949494"];
+export const recentSearches = [
+  "brutalism typography posters",
+  "webinar poster",
+  "typography poster",
+  "typography",
+];
+export const recentColors = [
+  "#A67A19",
+  "#333333",
+  "#BEB5AB",
+  "#57612C",
+  "#601515",
+  "#325788",
+  "#6BA661",
+  "#CB1E1E",
+  "#34806D",
+  "#949494",
+];
+export const recentlyViewed = [
+  "https://picsum.photos/id/234/200/300",
+  "https://picsum.photos/id/96/200/200",
+  "https://picsum.photos/id/106/200/280",
+  "https://picsum.photos/id/110/200/280",
+  "https://picsum.photos/id/118/200/300",
+  "https://picsum.photos/id/119/200/250",
+  "https://picsum.photos/id/152/200/280",
+  "https://picsum.photos/id/164/200/300",
+  "https://picsum.photos/id/175/200/250",
+  "https://picsum.photos/id/180/200/300",
+  "https://picsum.photos/id/188/200/280",
+  "https://picsum.photos/id/192/200/280",
+  "https://picsum.photos/id/200/200/300",
+  "https://picsum.photos/id/202/200/200",
+  "https://picsum.photos/id/214/200/300",
+];
 
 // Populate exploreElements now that PICSUM_POOL is defined. Stride-sample so
 // the rendered grid spans the full catalog (not just consecutive low IDs).

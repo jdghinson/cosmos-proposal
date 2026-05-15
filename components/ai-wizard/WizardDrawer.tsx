@@ -120,17 +120,17 @@ export function WizardDrawer() {
             key="backdrop"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+            exit={{ opacity: 0, transition: { duration: 0.16 } }}
             transition={{ duration: 0.22 }}
             onClick={handleClose}
             className="fixed inset-0 z-40 bg-black/55 backdrop-blur-sm"
           />
           <motion.aside
             key="panel"
-            initial={{ x: "100%" }}
-            animate={{ x: 0 }}
-            exit={{ x: "100%" }}
-            transition={{ type: "spring", stiffness: 260, damping: 32 }}
+            initial={{ transform: "translateX(100%)" }}
+            animate={{ transform: "translateX(0%)" }}
+            exit={{ transform: "translateX(100%)", transition: { duration: 0.32, ease: [0.32, 0.72, 0, 1] } }}
+            transition={{ type: "tween", duration: 0.5, ease: [0.32, 0.72, 0, 1] }}
             className="fixed right-0 top-0 z-50 flex h-full w-[85vw] max-w-[1180px] flex-col bg-bg shadow-[0_0_64px_rgba(0,0,0,0.6)] ring-1 ring-inset ring-border"
             role="dialog"
             aria-label="New AI Collection"
@@ -140,7 +140,7 @@ export function WizardDrawer() {
                 {step === "results" || step === "generating" ? (
                   <button
                     onClick={() => setStep("brief")}
-                    className="grid h-8 w-8 place-items-center rounded-full text-fg-muted hover:bg-surface hover:text-fg"
+                    className="grid h-8 w-8 place-items-center rounded-full text-fg-muted hover:bg-surface hover:text-fg transition-[background-color,color,transform] duration-150 ease-out active:scale-[0.92]"
                     aria-label="Back"
                   >
                     <ArrowLeft size={15} />
@@ -157,7 +157,7 @@ export function WizardDrawer() {
               <button
                 onClick={handleClose}
                 aria-label="Close"
-                className="grid h-8 w-8 place-items-center rounded-full text-fg-muted hover:bg-surface hover:text-fg"
+                className="grid h-8 w-8 place-items-center rounded-full text-fg-muted hover:bg-surface hover:text-fg transition-[background-color,color,transform] duration-150 ease-out active:scale-[0.92]"
               >
                 <X size={16} />
               </button>
@@ -170,7 +170,7 @@ export function WizardDrawer() {
                     key="brief"
                     initial={{ opacity: 0, y: 6 }}
                     animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -6 }}
+                    exit={{ opacity: 0, y: -6, transition: { duration: 0.16 } }}
                     transition={{ duration: 0.22 }}
                     className="mx-auto max-w-[560px] px-6 py-8"
                   >
@@ -182,7 +182,7 @@ export function WizardDrawer() {
                     key="generating"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
+                    exit={{ opacity: 0, transition: { duration: 0.16 } }}
                     transition={{ duration: 0.22 }}
                     className="px-8 py-8"
                   >
@@ -194,7 +194,7 @@ export function WizardDrawer() {
                     key="results"
                     initial={{ opacity: 0, y: 6 }}
                     animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -6 }}
+                    exit={{ opacity: 0, y: -6, transition: { duration: 0.16 } }}
                     transition={{ duration: 0.22 }}
                     className="px-8 py-6"
                   >

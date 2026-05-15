@@ -13,7 +13,7 @@ export function CollectionGrid({ images, collectionName = "New" }: { images: str
           <Link
             key={url + i}
             href={`/element?src=${encodeURIComponent(url)}`}
-            className="group relative block cursor-zoom-in overflow-hidden rounded-[4px] ring-1 ring-inset ring-border"
+            className="group relative block cursor-zoom-in overflow-hidden rounded-[4px] ring-1 ring-inset ring-border active:scale-[0.995] transition-transform duration-150 ease-out"
           >
             <div
               className="w-full bg-surface"
@@ -23,7 +23,7 @@ export function CollectionGrid({ images, collectionName = "New" }: { images: str
               <img
                 src={url}
                 alt=""
-                className="h-full w-full object-cover transition-transform duration-300 ease-out group-hover:scale-[1.01]"
+                className="h-full w-full object-cover transition-transform duration-300 ease-out [@media(hover:hover)]:group-hover:scale-[1.01]"
               />
             </div>
 

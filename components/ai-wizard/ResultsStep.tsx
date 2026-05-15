@@ -55,7 +55,7 @@ export function ResultsStep({ state, setState, onSave, onRegenerate }: Props) {
             <button
               key={url + i}
               onClick={() => toggle(url)}
-              className="group relative block w-full overflow-hidden rounded-lg bg-surface2"
+              className="group relative block w-full overflow-hidden rounded-lg bg-surface2 active:scale-[0.99] transition-transform duration-150 ease-out"
               style={{ aspectRatio: aspect }}
               aria-pressed={on}
               aria-label={on ? "Remove from collection" : "Add to collection"}
@@ -65,13 +65,13 @@ export function ResultsStep({ state, setState, onSave, onRegenerate }: Props) {
                 src={url}
                 alt=""
                 className={
-                  "absolute inset-0 h-full w-full object-cover transition-all duration-300 group-hover:scale-[1.02] " +
+                  "absolute inset-0 h-full w-full object-cover transition-[transform,filter] ease-out duration-300 group-hover:scale-[1.02] " +
                   (on ? "" : "brightness-[0.7]")
                 }
               />
               <span
                 className={
-                  "absolute right-2 top-2 grid h-8 w-8 place-items-center rounded-full shadow-[0_2px_8px_rgba(0,0,0,0.35)] transition-transform group-hover:scale-105 " +
+                  "absolute right-2 top-2 grid h-8 w-8 place-items-center rounded-full shadow-[0_2px_8px_rgba(0,0,0,0.35)] transition-transform duration-150 ease-out group-hover:scale-105 " +
                   (on ? "bg-black text-white" : "bg-white text-black")
                 }
               >
@@ -98,7 +98,7 @@ export function ResultsStep({ state, setState, onSave, onRegenerate }: Props) {
       <div className="sticky bottom-0 -mx-8 -mb-6 mt-2 flex items-center justify-between gap-3 border-t border-border bg-bg/95 px-8 pb-6 pt-4 backdrop-blur">
         <button
           onClick={onRegenerate}
-          className="flex items-center gap-1.5 rounded-full bg-surface px-4 py-2.5 text-[13px] text-fg-muted ring-1 ring-inset ring-border hover:text-fg"
+          className="flex items-center gap-1.5 rounded-full bg-surface px-4 py-2.5 text-[13px] text-fg-muted ring-1 ring-inset ring-border hover:text-fg active:scale-[0.97] transition-transform duration-150 ease-out"
         >
           <RefreshCw size={13} />
           Regenerate
@@ -106,7 +106,7 @@ export function ResultsStep({ state, setState, onSave, onRegenerate }: Props) {
         <button
           onClick={onSave}
           disabled={selectedCount === 0}
-          className="flex items-center gap-1.5 rounded-full bg-fg px-6 py-2.5 text-[14px] font-medium tracking-[-0.28px] text-[#0D0D0D] disabled:opacity-30"
+          className="flex items-center gap-1.5 rounded-full bg-fg px-6 py-2.5 text-[14px] font-medium tracking-[-0.28px] text-[#0D0D0D] disabled:opacity-30 active:scale-[0.97] transition-transform duration-150 ease-out"
         >
           Done
         </button>

@@ -3,7 +3,7 @@
 import { Search } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { recentColors, recentSearches } from "@/lib/mock-data";
+import { recentColors, recentSearches, recentlyViewed } from "@/lib/mock-data";
 
 const PLACEHOLDERS = [
   "Search Cosmos…",
@@ -67,11 +67,14 @@ export function SearchBar({ scope }: { scope?: SearchScope }) {
   }, []);
 
   return (
-    <div ref={ref} className="relative">
+    <div
+      ref={ref}
+      className={`relative mx-auto transition-[width] duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] ${open && !scope ? "w-[601px]" : "w-[480px]"}`}
+    >
       <div className="flex h-[54px] items-center gap-2 rounded-full bg-surface p-2 ring-1 ring-inset ring-border">
         {scope ? (
-          <div className="ml-1 flex h-[38px] items-center gap-1.5 rounded-full bg-bg pl-1 pr-3 ring-1 ring-inset ring-border">
-            <div className="h-7 w-7 shrink-0 overflow-hidden rounded-full bg-surface2">
+          <div className="flex h-10 shrink-0 items-center gap-1.5 rounded-full bg-bg py-2 pl-2 pr-3 ring-[0.5px] ring-inset ring-border">
+            <div className="h-6 w-6 shrink-0 overflow-hidden rounded-lg bg-surface2">
               {scope.avatar ? (
                 scope.avatar
               ) : scope.thumbnail ? (
@@ -90,7 +93,7 @@ export function SearchBar({ scope }: { scope?: SearchScope }) {
                 </div>
               )}
             </div>
-            <span className="max-w-[140px] truncate text-[13px] font-medium tracking-[-0.26px] text-fg">
+            <span className="line-clamp-1 max-w-[140px] text-[14px] font-medium leading-[18px] text-fg">
               {scope.name}
             </span>
           </div>
@@ -100,26 +103,26 @@ export function SearchBar({ scope }: { scope?: SearchScope }) {
         <input
           placeholder={placeholder}
           onFocus={() => !scope && setOpen(true)}
-          className="flex-1 bg-transparent text-[14px] font-medium tracking-[-0.28px] text-fg placeholder:text-fg-muted outline-none"
+          className="min-w-0 flex-1 bg-transparent text-[14px] font-medium leading-[18px] tracking-[-0.28px] text-fg placeholder:text-fg-muted outline-none"
         />
         <button
           aria-label="Visual search"
-          className="grid h-[38px] w-[38px] place-items-center rounded-full text-fg-muted hover:bg-surface2 hover:text-fg"
+          className="grid h-[38px] w-[38px] shrink-0 place-items-center rounded-full text-fg-muted hover:bg-surface2 hover:text-fg"
         >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
             <path
               stroke="currentColor"
               strokeWidth="1.75"
               d="M9 4h-.2c-1.68 0-2.52 0-3.162.327a3 3 0 0 0-1.311 1.311C4 6.28 4 7.12 4 8.8V9m11-5h.2c1.68 0 2.52 0 3.162.327a3 3 0 0 1 1.311 1.311C20 6.28 20 7.12 20 8.8V9M9 20h-.2c-1.68 0-2.52 0-3.162-.327a3 3 0 0 1-1.311-1.311C4 17.72 4 16.88 4 15.2V15m11 5h.2c1.68 0 2.52 0 3.162-.327a3 3 0 0 0 1.311-1.311C20 17.72 20 16.88 20 15.2V15"
             />
-            <circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth="1.75" />
+            <circle cx="12" cy="12" r="3" stroke="currentColor" strokeLinecap="square" strokeWidth="1.75" />
           </svg>
         </button>
         <button
           aria-label="Color search"
-          className="grid h-[38px] w-[38px] place-items-center rounded-full hover:bg-surface2"
+          className="grid h-[38px] w-[38px] shrink-0 place-items-center rounded-full hover:bg-surface2"
         >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
             {COSMOS_DOTS.map((d, i) => (
               <ellipse key={i} cx={d.cx} cy={d.cy} rx="1.952" ry="1.941" fill={d.fill} />
             ))}
@@ -127,50 +130,98 @@ export function SearchBar({ scope }: { scope?: SearchScope }) {
         </button>
       </div>
 
-      <AnimatePresence>
-        {open && !scope && (
-          <motion.div
-            initial={{ opacity: 0, y: -4 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -4 }}
-            transition={{ duration: 0.18 }}
-            className="absolute left-0 right-0 top-[calc(100%+8px)] z-30 rounded-2xl bg-surface p-4 shadow-[0_8px_32px_rgba(0,0,0,0.4)] ring-1 ring-inset ring-border"
-          >
-            <div className="mb-4">
-              <div className="mb-2 flex items-center justify-between text-[12px] text-fg-muted">
-                <span>Recent</span>
-                <button className="hover:text-fg">Clear</button>
-              </div>
-              <div className="flex flex-wrap gap-2">
+      {open && !scope && (
+        <div
+          className="absolute left-0 right-0 top-[calc(100%+8px)] z-50 flex flex-col gap-6 rounded-2xl bg-surface p-6 shadow-[0_8px_32px_rgba(0,0,0,0.4)] ring-1 ring-inset ring-border"
+        >
+            <Section title="Recent" showClear>
+              <HorizontalRow>
                 {recentSearches.map((q) => (
                   <button
                     key={q}
-                    className="flex items-center gap-2 rounded-full bg-surface2 px-3 py-1.5 text-[12px] text-fg hover:bg-surface3"
+                    className="flex h-10 shrink-0 items-center gap-1.5 rounded-xl bg-surface3 pl-2 pr-3 text-[14px] font-medium leading-[18px] tracking-[-0.28px] text-fg hover:bg-surface2"
                   >
-                    <Search size={12} className="text-fg-muted" />
-                    {q}
+                    <Search size={20} strokeWidth={1.75} className="shrink-0 text-fg-muted" />
+                    <span className="whitespace-nowrap">{q}</span>
                   </button>
                 ))}
-              </div>
-            </div>
+              </HorizontalRow>
+            </Section>
 
-            <div className="mb-2">
-              <div className="mb-2 text-[12px] text-fg-muted">Colors</div>
-              <div className="flex flex-wrap gap-2">
+            <Section title="Colors">
+              <HorizontalRow>
                 {recentColors.map((c) => (
                   <button
                     key={c}
-                    className="flex items-center gap-2 rounded-full bg-surface2 px-3 py-1.5 text-[12px] text-fg hover:bg-surface3"
+                    className="flex h-10 shrink-0 items-center gap-2 rounded-xl bg-surface3 pl-2 pr-3 text-[14px] font-medium leading-[18px] tracking-[-0.28px] text-fg hover:bg-surface2"
                   >
-                    <span className="block h-3 w-3 rounded-full" style={{ background: c }} />
-                    {c}
+                    <span
+                      className="block h-[18px] w-[18px] shrink-0 rounded-md"
+                      style={{ background: c }}
+                    />
+                    <span className="whitespace-nowrap">{c}</span>
                   </button>
                 ))}
-              </div>
-            </div>
-          </motion.div>
+              </HorizontalRow>
+            </Section>
+
+            <Section title="Recently viewed" showClear>
+              <HorizontalRow>
+                {recentlyViewed.map((url, i) => (
+                  <span
+                    key={i}
+                    className="block h-[120px] w-[100px] shrink-0 overflow-hidden rounded-[10px] ring-[0.5px] ring-inset ring-border"
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={url} alt="" className="h-full w-full object-cover" />
+                  </span>
+                ))}
+              </HorizontalRow>
+            </Section>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function Section({
+  title,
+  showClear,
+  children,
+}: {
+  title: string;
+  showClear?: boolean;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="flex flex-col gap-1.5">
+      <div className="flex items-center justify-between">
+        <span className="text-[14px] font-medium leading-[18px] tracking-[-0.28px] text-fg-muted">
+          {title}
+        </span>
+        {showClear && (
+          <button className="text-[12px] leading-[14px] tracking-[-0.24px] text-fg-muted hover:text-fg">
+            Clear
+          </button>
         )}
-      </AnimatePresence>
+      </div>
+      {children}
+    </div>
+  );
+}
+
+function HorizontalRow({ children }: { children: React.ReactNode }) {
+  return (
+    <div
+      className="scrollbar-none -mx-2 flex gap-2 overflow-x-auto px-2"
+      style={{
+        WebkitMaskImage:
+          "linear-gradient(90deg, transparent 0, black 16px, black calc(100% - 16px), transparent 100%)",
+        maskImage:
+          "linear-gradient(90deg, transparent 0, black 16px, black calc(100% - 16px), transparent 100%)",
+      }}
+    >
+      {children}
     </div>
   );
 }

@@ -102,7 +102,7 @@ export function SeeSimilarSheet({
                 <button
                   onClick={onClose}
                   aria-label="Close"
-                  className="absolute left-12 top-8 grid h-10 w-10 place-items-center rounded-full bg-surface text-fg hover:bg-surface2"
+                  className="absolute left-12 top-8 grid h-10 w-10 place-items-center rounded-full bg-surface text-fg hover:bg-surface2 active:scale-[0.92] transition-[background-color,transform] duration-150 ease-out"
                 >
                   <X size={20} strokeWidth={1.75} />
                 </button>

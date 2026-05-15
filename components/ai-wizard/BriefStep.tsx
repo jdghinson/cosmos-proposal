@@ -86,7 +86,7 @@ export function BriefStep({ state, setState, onSubmit }: Props) {
             className="flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[12px] text-fg-muted hover:bg-surface hover:text-fg"
           >
             Add details
-            <ChevronDown size={13} className={"transition-transform " + (expanded ? "rotate-180" : "")} />
+            <ChevronDown size={13} className={"transition-transform duration-200 ease-out " + (expanded ? "rotate-180" : "")} />
           </button>
           {state.keywords.length + state.projectTypes.length > 0 && (
             <span className="text-[11px] text-fg-subtle">
@@ -120,7 +120,7 @@ export function BriefStep({ state, setState, onSubmit }: Props) {
         <button
           onClick={onSubmit}
           disabled={!canSubmit}
-          className="flex w-full items-center justify-center gap-1.5 rounded-full bg-fg px-4 py-3 text-[14px] font-medium tracking-[-0.28px] text-[#0D0D0D] disabled:cursor-not-allowed disabled:opacity-30"
+          className="flex w-full items-center justify-center gap-1.5 rounded-full bg-fg px-4 py-3 text-[14px] font-medium tracking-[-0.28px] text-[#0D0D0D] disabled:cursor-not-allowed disabled:opacity-30 active:scale-[0.97] transition-transform duration-150 ease-out"
         >
           <Sparkles size={14} />
           Generate collection
@@ -143,7 +143,7 @@ function PrivateToggle({ isPrivate, onToggle }: { isPrivate: boolean; onToggle: 
   return (
     <button
       onClick={onToggle}
-      className="flex w-full items-center justify-between gap-4 text-left"
+      className="flex w-full items-center justify-between gap-4 text-left active:scale-[0.98] transition-transform duration-150 ease-out"
     >
       <div>
         <div className="text-[14px] font-medium text-fg">Make private</div>
@@ -152,13 +152,13 @@ function PrivateToggle({ isPrivate, onToggle }: { isPrivate: boolean; onToggle: 
       <span
         aria-hidden
         className={
-          "relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors " +
+          "relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-[background-color] duration-200 ease-out " +
           (isPrivate ? "bg-fg" : "bg-surface3")
         }
       >
         <span
           className={
-            "inline-block h-5 w-5 rounded-full bg-bg shadow-sm transition-transform " +
+            "inline-block h-5 w-5 rounded-full bg-bg shadow-sm transition-transform duration-200 ease-out " +
             (isPrivate ? "translate-x-[22px]" : "translate-x-[2px]")
           }
         />

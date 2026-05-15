@@ -9,6 +9,7 @@ export function SelectedRow({ highlightId }: { highlightId?: string }) {
   const { collections } = useCollections();
   const saved = collections.filter((c) => c.source === "ai" && c.id.startsWith("seed-"));
   const scrollerRef = useRef<HTMLDivElement>(null);
+  const tweenRef = useRef<number | null>(null);
   const [canPrev, setCanPrev] = useState(false);
   const [canNext, setCanNext] = useState(true);
 
@@ -28,6 +29,24 @@ export function SelectedRow({ highlightId }: { highlightId?: string }) {
     };
   }, [saved.length]);
 
+  function tweenScroll(el: HTMLElement, deltaX: number, durationMs: number) {
+    const startLeft = el.scrollLeft;
+    const startTime = performance.now();
+    const endLeft = startLeft + deltaX;
+    if (tweenRef.current) cancelAnimationFrame(tweenRef.current);
+    const ease = (t: number) => 1 - Math.pow(1 - t, 3);
+    const step = (now: number) => {
+      const t = Math.min(1, (now - startTime) / durationMs);
+      el.scrollLeft = startLeft + (endLeft - startLeft) * ease(t);
+      if (t < 1) {
+        tweenRef.current = requestAnimationFrame(step);
+      } else {
+        tweenRef.current = null;
+      }
+    };
+    tweenRef.current = requestAnimationFrame(step);
+  }
+
   function scrollByCard(direction: 1 | -1) {
     const el = scrollerRef.current;
     if (!el) return;
@@ -35,7 +54,7 @@ export function SelectedRow({ highlightId }: { highlightId?: string }) {
     // of cards so the arrow advances visibly without feeling jumpy.
     const card = 365 + 32;
     const cards = Math.max(1, Math.floor(el.clientWidth / card));
-    el.scrollBy({ left: direction * card * cards, behavior: "smooth" });
+    tweenScroll(el, direction * card * cards, 280);
   }
 
   return (
@@ -70,7 +89,7 @@ export function SelectedRow({ highlightId }: { highlightId?: string }) {
           <button
             onClick={() => scrollByCard(-1)}
             aria-label="Previous"
-            className="absolute left-2 top-[91px] z-10 grid h-8 w-8 -translate-y-1/2 place-items-center rounded-full bg-surface/90 text-fg ring-1 ring-inset ring-border backdrop-blur-md hover:bg-surface2"
+            className="absolute left-2 top-[91px] z-10 grid h-8 w-8 -translate-y-1/2 place-items-center rounded-full bg-surface/90 text-fg ring-1 ring-inset ring-border backdrop-blur-md hover:bg-surface2 active:scale-[0.9] transition-[background-color,transform] duration-150 ease-out"
             style={{ boxShadow: "0 3px 12px rgba(0,0,0,0.05)" }}
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
@@ -88,7 +107,7 @@ export function SelectedRow({ highlightId }: { highlightId?: string }) {
           <button
             onClick={() => scrollByCard(1)}
             aria-label="Next"
-            className="absolute right-8 top-[91px] z-10 grid h-8 w-8 -translate-y-1/2 place-items-center rounded-full bg-surface/90 text-fg ring-1 ring-inset ring-border backdrop-blur-md hover:bg-surface2"
+            className="absolute right-8 top-[91px] z-10 grid h-8 w-8 -translate-y-1/2 place-items-center rounded-full bg-surface/90 text-fg ring-1 ring-inset ring-border backdrop-blur-md hover:bg-surface2 active:scale-[0.9] transition-[background-color,transform] duration-150 ease-out"
             style={{ boxShadow: "0 3px 12px rgba(0,0,0,0.05)" }}
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none">

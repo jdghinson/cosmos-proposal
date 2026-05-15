@@ -10,7 +10,7 @@ export function ExploreGrid() {
           <Link
             key={el.id}
             href={`/element?src=${encodeURIComponent(el.url)}`}
-            className="block w-full cursor-zoom-in overflow-hidden rounded-md bg-surface2"
+            className="block w-full cursor-zoom-in overflow-hidden rounded-md bg-surface2 active:scale-[0.995] transition-transform duration-150 ease-out"
             style={{ aspectRatio: el.aspect }}
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -18,7 +18,7 @@ export function ExploreGrid() {
               src={el.url}
               alt=""
               loading="lazy"
-              className="h-full w-full object-cover transition-transform duration-300 ease-out hover:scale-[1.015]"
+              className="h-full w-full object-cover transition-transform duration-300 ease-out [@media(hover:hover)]:hover:scale-[1.015]"
             />
           </Link>
         ))}
