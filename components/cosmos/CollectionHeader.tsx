@@ -1,9 +1,11 @@
 "use client";
 
-import { Globe, Lock, Plus, UserPlus, MoreHorizontal } from "lucide-react";
+import { Globe, Lock, Plus, UserPlus } from "lucide-react";
 import type { Collaborator } from "@/lib/mock-data";
+import { CollectionMoreMenu } from "./CollectionMoreMenu";
 
 type Props = {
+  id: string;
   title: string;
   author: string;
   isPrivate?: boolean;
@@ -11,6 +13,7 @@ type Props = {
 };
 
 export function CollectionHeader({
+  id,
   title,
   author,
   isPrivate = true,
@@ -67,7 +70,7 @@ export function CollectionHeader({
         <ActionButton icon={<Plus size={20} strokeWidth={1.75} />} label="New" />
         <ActionButton icon={<SimilarIcon />} label="Similar" disabled />
         <ActionButton icon={<OrganizeIcon />} label="Organize" />
-        <ActionButton icon={<MoreHorizontal size={20} strokeWidth={1.75} />} label="More" />
+        <CollectionMoreMenu collectionId={id} />
       </div>
     </header>
   );

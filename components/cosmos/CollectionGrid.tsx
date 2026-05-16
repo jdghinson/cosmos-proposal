@@ -32,19 +32,19 @@ export function CollectionGrid({ images, collectionName = "New" }: { images: str
               aria-hidden
             />
 
-            <div className="absolute inset-x-3 top-3 flex items-start justify-between opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+            <div className="absolute inset-x-3 top-3 flex items-start justify-between gap-3 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
               <button
                 onClick={(e) => e.preventDefault()}
-                className="flex cursor-default items-center gap-0.5 text-[18px] font-semibold tracking-[-0.36px] text-white"
+                className="flex min-w-0 cursor-default items-center gap-0.5 text-[18px] font-semibold tracking-[-0.36px] text-white"
                 style={{ textShadow: "0 2px 12px rgba(0, 0, 0, 0.45)" }}
               >
-                {collectionName}
-                <ChevronDown size={18} strokeWidth={2.5} />
+                <span className="truncate">{collectionName}</span>
+                <ChevronDown size={18} strokeWidth={2.5} className="shrink-0" />
               </button>
 
               <button
                 onClick={(e) => e.preventDefault()}
-                className="cursor-default rounded-full bg-black/55 px-3.5 py-1.5 text-[14px] font-medium tracking-[-0.28px] text-white backdrop-blur-md hover:bg-black/70"
+                className="shrink-0 cursor-default rounded-full bg-black/55 px-3.5 py-1.5 text-[14px] font-medium tracking-[-0.28px] text-white backdrop-blur-md hover:bg-black/70"
               >
                 Saved
               </button>

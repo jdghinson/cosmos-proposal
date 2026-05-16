@@ -347,7 +347,7 @@ function shuffle<T>(arr: T[], seed: number): T[] {
   return a;
 }
 
-export function resultsForBrief(brief: string, extraTags: string[] = []): string[] {
+function buildResults(brief: string, extraTags: string[], seed: number): string[] {
   const haystack = (brief + " " + extraTags.join(" ")).toLowerCase();
   let best: ResultSet | null = null;
   let bestScore = 0;
@@ -358,7 +358,6 @@ export function resultsForBrief(brief: string, extraTags: string[] = []): string
       bestScore = score;
     }
   }
-  const seed = Date.now() + Math.floor(Math.random() * 9973);
   const themed = best?.images ?? FALLBACK;
   // Take a handful of themed images so the result still nods to the brief,
   // then fill the rest with random picsum images for variety. The pool is
@@ -371,6 +370,34 @@ export function resultsForBrief(brief: string, extraTags: string[] = []): string
     .slice(0, TOTAL - THEMED_COUNT)
     .map((id) => picsumUrl(id));
   return shuffle([...themedPick, ...randomPick], seed + 13).slice(0, TOTAL);
+}
+
+// Random each call — the wizard's "Regenerate" depends on this.
+export function resultsForBrief(brief: string, extraTags: string[] = []): string[] {
+  const seed = Date.now() + Math.floor(Math.random() * 9973);
+  return buildResults(brief, extraTags, seed);
+}
+
+function hashString(s: string): number {
+  let h = 2166136261;
+  for (let i = 0; i < s.length; i++) {
+    h ^= s.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return Math.abs(h) || 1;
+}
+
+const similarCache = new Map<string, string[]>();
+
+// Deterministic + cached per brief, so the "See similar" views stay stable
+// across re-renders and navigation (open similar → view an element → back).
+export function similarForBrief(brief: string, extraTags: string[] = []): string[] {
+  const key = brief + "|" + extraTags.join(",");
+  const cached = similarCache.get(key);
+  if (cached) return cached;
+  const result = buildResults(brief, extraTags, hashString(key));
+  similarCache.set(key, result);
+  return result;
 }
 
 const STOPWORDS = new Set([

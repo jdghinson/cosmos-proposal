@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { ChevronDown } from "lucide-react";
-import { resultsForBrief } from "@/lib/mock-data";
+import { similarForBrief } from "@/lib/mock-data";
 import { SeeSimilarSheet } from "./SeeSimilarSheet";
 
 export function SeeSimilar({
@@ -15,7 +15,7 @@ export function SeeSimilar({
   collectionName: string;
   collectionThumbnail?: string;
 }) {
-  const thumbs = useMemo(() => resultsForBrief(brief).slice(0, 3), [brief]);
+  const thumbs = useMemo(() => similarForBrief(brief).slice(0, 3), [brief]);
   const pathname = usePathname();
   const params = useSearchParams();
   const initiallyOpen = params.get("similar") === "1";

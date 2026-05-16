@@ -2,8 +2,10 @@
 
 import { useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { ChevronLeft, ChevronDown, ChevronUp, MoreHorizontal } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
+import { BadgeCheck, ChevronLeft, ChevronDown, ChevronUp, MoreHorizontal } from "lucide-react";
 import { useCollections } from "@/lib/collections-store";
+import type { SavedCollection } from "@/lib/mock-data";
 import { CollectionsPickerDropdown } from "./CollectionsPickerDropdown";
 
 const FALLBACK_DESCRIPTION =
@@ -18,11 +20,46 @@ export function ElementDetail({ src }: { src: string }) {
     [collections, src],
   );
 
-  const userCollections = collections.filter((c) => !c.id.startsWith("seed-"));
-  const destination = userCollections[0];
+  // On the explore path there's no collection context, so default the save
+  // target to the user's most recently created collection.
+  const destination = useMemo(() => {
+    const userCollections = collections.filter((c) => !c.id.startsWith("seed-"));
+    return [...userCollections].sort((a, b) => b.createdAt - a.createdAt)[0];
+  }, [collections]);
 
   const [pickerOpen, setPickerOpen] = useState(false);
   const destRef = useRef<HTMLButtonElement>(null);
+
+  // Hover preview popover for the "Saved by" collection rows.
+  const asideRef = useRef<HTMLElement>(null);
+  const hideTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [preview, setPreview] = useState<{ c: SavedCollection; top: number } | null>(null);
+  const [followed, setFollowed] = useState<Set<string>>(new Set());
+
+  function showPreview(c: SavedCollection, rowEl: HTMLElement) {
+    if (hideTimer.current) clearTimeout(hideTimer.current);
+    const asideBox = asideRef.current?.getBoundingClientRect();
+    const rowBox = rowEl.getBoundingClientRect();
+    setPreview({ c, top: asideBox ? rowBox.top - asideBox.top : 0 });
+  }
+
+  function hidePreview() {
+    if (hideTimer.current) clearTimeout(hideTimer.current);
+    hideTimer.current = setTimeout(() => setPreview(null), 120);
+  }
+
+  function cancelHide() {
+    if (hideTimer.current) clearTimeout(hideTimer.current);
+  }
+
+  function toggleFollow(id: string) {
+    setFollowed((s) => {
+      const next = new Set(s);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }
 
   return (
     <section className="px-8 pb-12">
@@ -48,7 +85,10 @@ export function ElementDetail({ src }: { src: string }) {
           </div>
         </div>
 
-        <aside className="flex w-[420px] shrink-0 flex-col gap-6 border-l-[0.5px] border-border pt-8">
+        <aside
+          ref={asideRef}
+          className="relative flex w-[420px] shrink-0 flex-col gap-6 border-l-[0.5px] border-border pt-8"
+        >
           <div className="flex items-center justify-end px-8">
             <button
               aria-label="More"
@@ -83,7 +123,14 @@ export function ElementDetail({ src }: { src: string }) {
                 savedByCollections.map((c) => (
                   <div
                     key={c.id}
-                    className="flex items-center gap-3 rounded-2xl p-3 ring-[0.5px] ring-inset ring-border"
+                    onMouseEnter={(e) => showPreview(c, e.currentTarget)}
+                    onMouseLeave={hidePreview}
+                    className={
+                      "flex cursor-pointer items-center gap-3 rounded-2xl p-3 ring-[0.5px] ring-inset transition-colors duration-150 " +
+                      (preview?.c.id === c.id
+                        ? "bg-surface2 ring-border"
+                        : "ring-border hover:bg-surface2")
+                    }
                   >
                     <span className="h-10 w-10 shrink-0 overflow-hidden rounded-lg bg-surface3 ring-[0.5px] ring-inset ring-border">
                       {c.imageUrls[0] && (
@@ -150,6 +197,67 @@ export function ElementDetail({ src }: { src: string }) {
               Save
             </button>
           </div>
+
+          <AnimatePresence>
+            {preview && (
+              <motion.div
+                key={preview.c.id}
+                initial={{ opacity: 0, scale: 0.96, x: 8 }}
+                animate={{ opacity: 1, scale: 1, x: 0 }}
+                exit={{ opacity: 0, scale: 0.96, x: 8, transition: { duration: 0.12, ease: [0.2, 0.6, 0.2, 1] } }}
+                transition={{ duration: 0.18, ease: [0.2, 0.6, 0.2, 1] }}
+                onMouseEnter={cancelHide}
+                onMouseLeave={hidePreview}
+                style={{ top: preview.top, transformOrigin: "right center" }}
+                className="absolute right-[calc(100%+16px)] z-50 w-[460px] overflow-hidden rounded-2xl shadow-[0_16px_48px_rgba(0,0,0,0.45)] ring-[0.5px] ring-border"
+              >
+                <div className="flex h-[150px]">
+                  {preview.c.imageUrls.slice(0, 4).map((u, i) => (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      key={u + i}
+                      src={u}
+                      alt=""
+                      className="h-full flex-1 object-cover"
+                    />
+                  ))}
+                </div>
+
+                <div className="flex items-center gap-3 bg-[#0D0D0D] p-3">
+                  <span className="h-11 w-11 shrink-0 overflow-hidden rounded-xl bg-surface3">
+                    {preview.c.imageUrls[0] && (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={preview.c.imageUrls[0]}
+                        alt=""
+                        className="h-full w-full object-cover"
+                      />
+                    )}
+                  </span>
+                  <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+                    <span className="flex items-center gap-1 text-[15px] font-medium tracking-[-0.3px] text-white">
+                      <span className="truncate">{preview.c.title}</span>
+                      <BadgeCheck size={15} strokeWidth={2} className="shrink-0 text-white/60" />
+                    </span>
+                    <span className="truncate text-[13px] tracking-[-0.26px] text-white/55">
+                      {preview.c.imageUrls.length} elements · @jdghinson
+                    </span>
+                  </div>
+                  <button
+                    onClick={() => toggleFollow(preview.c.id)}
+                    className={
+                      "shrink-0 rounded-full px-5 py-2 text-[14px] font-medium tracking-[-0.28px] transition-[background-color,transform] duration-150 ease-out active:scale-[0.97] " +
+                      (followed.has(preview.c.id)
+                        ? "bg-white/15 text-white hover:bg-white/20"
+                        : "bg-white text-[#0D0D0D] hover:bg-white/90")
+                    }
+                  >
+                    {followed.has(preview.c.id) ? "Following" : "Follow"}
+                  </button>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </aside>
       </div>
 

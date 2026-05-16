@@ -51,6 +51,7 @@ export default function CollectionPage() {
       />
 
       <CollectionHeader
+        id={collection.id}
         title={collection.title}
         author="jdghinson"
         isPrivate={collection.isPrivate ?? true}

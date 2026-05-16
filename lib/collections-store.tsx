@@ -7,6 +7,7 @@ type Ctx = {
   collections: SavedCollection[];
   hydrated: boolean;
   addCollection: (c: SavedCollection) => void;
+  removeCollection: (id: string) => void;
   getCollection: (id: string) => SavedCollection | undefined;
 };
 
@@ -49,14 +50,24 @@ export function CollectionsProvider({ children }: { children: React.ReactNode })
     [],
   );
 
+  const removeCollection = useCallback((id: string) => {
+    setCollections((prev) => {
+      const next = prev.filter((c) => c.id !== id);
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+      } catch {}
+      return next;
+    });
+  }, []);
+
   const getCollection = useCallback(
     (id: string) => collections.find((c) => c.id === id),
     [collections],
   );
 
   const value = useMemo<Ctx>(
-    () => ({ collections, hydrated, addCollection, getCollection }),
-    [collections, hydrated, addCollection, getCollection],
+    () => ({ collections, hydrated, addCollection, removeCollection, getCollection }),
+    [collections, hydrated, addCollection, removeCollection, getCollection],
   );
 
   return <CollectionsContext.Provider value={value}>{children}</CollectionsContext.Provider>;

@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Sparkles } from "lucide-react";
+import { Logo } from "@/components/cosmos/Logo";
 import type { WizardState } from "./types";
 
 const ASPECTS = ["3 / 4", "1 / 1", "4 / 5", "3 / 4", "5 / 6", "1 / 1", "3 / 4", "4 / 5"];
@@ -14,8 +14,9 @@ export function GeneratingStep({ state }: { state: WizardState }) {
           <motion.div
             animate={{ rotate: 360 }}
             transition={{ duration: 1.6, ease: "linear", repeat: Infinity }}
+            className="text-fg"
           >
-            <Sparkles size={18} className="text-fg" strokeWidth={1.5} />
+            <Logo size={18} />
           </motion.div>
         </div>
         <h2 className="text-[20px] font-medium tracking-[-0.4px] text-fg">

@@ -96,16 +96,16 @@ export function CollectionsPickerDropdown({
             <span className="text-[14px] tracking-[-0.28px] text-fg-muted">Collections</span>
 
             <div className="-mx-3 max-h-[260px] overflow-y-auto">
-              <button className="flex w-full items-center justify-between gap-3 rounded-xl p-3 hover:bg-surface2 active:scale-[0.97] transition-[background-color,transform] duration-150 ease-out">
-                <span className="flex items-center gap-3">
+              <button className="flex w-full items-center justify-between gap-3 rounded-xl p-3 text-left hover:bg-surface2 active:scale-[0.97] transition-[background-color,transform] duration-150 ease-out">
+                <span className="flex min-w-0 flex-1 items-center gap-3">
                   <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-surface3 text-fg-muted">
                     <NewCollectionIcon />
                   </span>
-                  <span className="flex flex-col gap-1 text-left">
-                    <span className="text-[14px] font-medium tracking-[-0.28px] text-fg">
+                  <span className="flex min-w-0 flex-1 flex-col gap-0.5 text-left">
+                    <span className="truncate text-[14px] font-medium tracking-[-0.28px] text-fg">
                       New collection
                     </span>
-                    <span className="text-[12px] font-medium tracking-[-0.24px] text-fg-muted">
+                    <span className="truncate text-[12px] font-medium tracking-[-0.24px] text-fg-muted">
                       Your place to organize elements
                     </span>
                   </span>
@@ -118,9 +118,9 @@ export function CollectionsPickerDropdown({
                 return (
                   <button
                     key={c.id}
-                    className="flex w-full items-center justify-between gap-3 rounded-xl p-3 hover:bg-surface2"
+                    className="flex w-full items-center justify-between gap-3 rounded-xl p-3 text-left hover:bg-surface2"
                   >
-                    <span className="flex min-w-0 items-center gap-3">
+                    <span className="flex min-w-0 flex-1 items-center gap-3">
                       <span className="h-10 w-10 shrink-0 overflow-hidden rounded-xl bg-surface3">
                         {c.imageUrls[0] && (
                           // eslint-disable-next-line @next/next/no-img-element
@@ -131,11 +131,11 @@ export function CollectionsPickerDropdown({
                           />
                         )}
                       </span>
-                      <span className="flex flex-col items-start gap-1">
-                        <span className="line-clamp-1 max-w-[160px] text-[14px] font-medium tracking-[-0.28px] text-fg">
+                      <span className="flex min-w-0 flex-1 flex-col gap-0.5">
+                        <span className="truncate text-[14px] font-medium tracking-[-0.28px] text-fg">
                           {c.title}
                         </span>
-                        <span className="text-[12px] font-medium tracking-[-0.24px] text-fg-muted">
+                        <span className="truncate text-[12px] font-medium tracking-[-0.24px] text-fg-muted">
                           {c.imageUrls.length} elements · {c.isPrivate ?? true ? "Private" : "Public"}
                         </span>
                       </span>

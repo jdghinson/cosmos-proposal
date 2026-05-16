@@ -4,8 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { X, ChevronDown, ChevronUp, Copy } from "lucide-react";
-import { resultsForBrief } from "@/lib/mock-data";
-import { useCollections } from "@/lib/collections-store";
+import { similarForBrief } from "@/lib/mock-data";
 import { CollectionsPickerDropdown } from "./CollectionsPickerDropdown";
 
 const ASPECTS = ["3 / 4", "1 / 1", "4 / 5", "3 / 4", "5 / 6", "1 / 1", "4 / 5", "3 / 4"];
@@ -23,14 +22,10 @@ export function SeeSimilarSheet({
   collectionName: string;
   collectionThumbnail?: string;
 }) {
-  const images = useMemo(() => (open ? resultsForBrief(brief) : []), [open, brief]);
-  const { collections } = useCollections();
-  const destination = useMemo(() => {
-    const recent = collections.find(
-      (c) => !c.id.startsWith("seed-") && c.title !== collectionName,
-    );
-    return recent?.title ?? "New";
-  }, [collections, collectionName]);
+  const images = useMemo(() => (open ? similarForBrief(brief) : []), [open, brief]);
+  // You're browsing more ideas *for the collection you're in*, so that's the
+  // default save destination. The per-card picker still lets you redirect.
+  const destination = collectionName;
   const scrollRef = useRef<HTMLDivElement>(null);
   const [showBackToTop, setShowBackToTop] = useState(false);
 
@@ -215,18 +210,18 @@ function SimilarCard({
       />
 
       <div
-        className={`absolute inset-x-3 top-3 flex items-start justify-between transition-opacity duration-200 ${overlayVisible ? "opacity-100" : "pointer-events-none opacity-0"}`}
+        className={`absolute inset-x-3 top-3 flex items-start justify-between gap-3 transition-opacity duration-200 ${overlayVisible ? "opacity-100" : "pointer-events-none opacity-0"}`}
       >
-        <div className="relative">
+        <div className="relative min-w-0">
           <button
             ref={destRef}
             onClick={() => setPickerOpen((v) => !v)}
             aria-expanded={pickerOpen}
-            className="flex items-center gap-0.5 text-[18px] font-semibold tracking-[-0.36px] text-white"
+            className="flex min-w-0 max-w-full items-center gap-0.5 text-[18px] font-semibold tracking-[-0.36px] text-white"
             style={{ textShadow: "0 2px 12px rgba(0, 0, 0, 0.45)" }}
           >
-            {destination}
-            <ChevronDown size={18} strokeWidth={2.5} />
+            <span className="truncate">{destination}</span>
+            <ChevronDown size={18} strokeWidth={2.5} className="shrink-0" />
           </button>
           <CollectionsPickerDropdown
             open={pickerOpen}
@@ -236,7 +231,7 @@ function SimilarCard({
             align="left"
           />
         </div>
-        <button className="rounded-full bg-white px-4 py-2 text-[14px] font-medium tracking-[-0.28px] text-[#0D0D0D] hover:bg-white/95">
+        <button className="shrink-0 rounded-full bg-white px-4 py-2 text-[14px] font-medium tracking-[-0.28px] text-[#0D0D0D] hover:bg-white/95">
           Save
         </button>
       </div>

@@ -11,6 +11,7 @@ import {
   type Collaborator,
   type SavedCollection,
 } from "@/lib/mock-data";
+import { Logo } from "@/components/cosmos/Logo";
 import type { useToaster } from "./Toaster";
 import { ImageTile } from "./ImageTile";
 
@@ -510,8 +511,17 @@ function CollaboratorsField({
 function NewGeneratingView({ brief }: { brief: string }) {
   return (
     <div className="flex h-full flex-col">
-      <div className="border-b border-border bg-surface px-3 py-2.5 text-[11px] text-fg-muted">
-        Generating · “{brief.slice(0, 40)}{brief.length > 40 ? "…" : ""}”
+      <div className="flex items-center gap-2 border-b border-border bg-surface px-3 py-2.5 text-[11px] text-fg-muted">
+        <motion.div
+          animate={{ rotate: 360 }}
+          transition={{ duration: 1.6, ease: "linear", repeat: Infinity }}
+          className="shrink-0 text-fg"
+        >
+          <Logo size={12} />
+        </motion.div>
+        <span className="truncate">
+          Generating · “{brief.slice(0, 40)}{brief.length > 40 ? "…" : ""}”
+        </span>
       </div>
       <div className="flex-1 overflow-hidden p-2">
         <div className="grid grid-cols-2 gap-1.5">
