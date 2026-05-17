@@ -31,7 +31,7 @@ export type SearchScope = {
   placeholder?: string;
 };
 
-export function SearchBar({ scope }: { scope?: SearchScope }) {
+export function SearchBar({ scope, fluid }: { scope?: SearchScope; fluid?: boolean }) {
   const [open, setOpen] = useState(false);
   const [placeholder, setPlaceholder] = useState(
     scope ? scope.placeholder ?? `Search in ${scope.name}…` : PLACEHOLDERS[3],
@@ -69,7 +69,11 @@ export function SearchBar({ scope }: { scope?: SearchScope }) {
   return (
     <div
       ref={ref}
-      className={`relative mx-auto transition-[width] duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] ${open && !scope ? "w-[601px]" : "w-[480px]"}`}
+      className={
+        fluid
+          ? "relative w-full"
+          : `relative mx-auto transition-[width] duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] ${open && !scope ? "w-[601px]" : "w-[480px]"}`
+      }
     >
       <div className="flex h-[54px] items-center gap-2 rounded-full bg-surface p-2 ring-1 ring-inset ring-border">
         {scope ? (
