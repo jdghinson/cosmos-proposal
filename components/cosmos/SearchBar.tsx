@@ -2,7 +2,6 @@
 
 import { Search } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
 import { recentColors, recentSearches, recentlyViewed } from "@/lib/mock-data";
 import { ImageSearchPanel } from "./ImageSearchPanel";
 import { ColorSearchPanel } from "./ColorSearchPanel";
@@ -113,6 +112,7 @@ export function SearchBar({ scope, fluid }: { scope?: SearchScope; fluid?: boole
         />
         <button
           aria-label="Visual search"
+          aria-pressed={panel === "image"}
           onClick={() => !scope && setPanel((p) => (p === "image" ? null : "image"))}
           className={
             "grid h-[38px] w-[38px] shrink-0 place-items-center rounded-full hover:bg-surface2 hover:text-fg " +
@@ -130,6 +130,7 @@ export function SearchBar({ scope, fluid }: { scope?: SearchScope; fluid?: boole
         </button>
         <button
           aria-label="Color search"
+          aria-pressed={panel === "color"}
           onClick={() => !scope && setPanel((p) => (p === "color" ? null : "color"))}
           className={
             "grid h-[38px] w-[38px] shrink-0 place-items-center rounded-full hover:bg-surface2 " +
