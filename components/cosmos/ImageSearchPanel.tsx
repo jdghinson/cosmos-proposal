@@ -7,7 +7,7 @@ export function ImageSearchPanel() {
     <div className="absolute left-0 right-0 top-[calc(100%+8px)] z-50 h-[316px] rounded-3xl bg-surface p-2 ring-[0.5px] ring-inset ring-border shadow-[0_1px_8px_rgba(0,0,0,0.05)]">
       <div className="relative h-full w-full rounded-2xl">
         <svg
-          className="pointer-events-none absolute inset-0 h-full w-full"
+          className="pointer-events-none absolute inset-0 h-full w-full text-fg-muted"
           fill="none"
         >
           <rect
@@ -18,12 +18,13 @@ export function ImageSearchPanel() {
             rx="16"
             ry="16"
             fill="none"
-            stroke="#918F8F"
+            stroke="currentColor"
             strokeWidth="1.5"
             strokeDasharray="3 5"
           />
         </svg>
         <div className="relative flex h-full flex-col items-center justify-center gap-4 px-8 pb-8 pt-12">
+          {/* Positioning anchor for the tilted thumbnail stack; cards intentionally overhang this box (no clip), matching the source design. */}
           <div className="relative size-16 shrink-0">
             <div
               className="absolute left-[22px] top-[7px] origin-top-left rounded-lg bg-bg"
