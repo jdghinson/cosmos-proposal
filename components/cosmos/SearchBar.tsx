@@ -4,6 +4,8 @@ import { Search } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { recentColors, recentSearches, recentlyViewed } from "@/lib/mock-data";
+import { ImageSearchPanel } from "./ImageSearchPanel";
+import { ColorSearchPanel } from "./ColorSearchPanel";
 
 const PLACEHOLDERS = [
   "Search Cosmos…",
@@ -32,7 +34,7 @@ export type SearchScope = {
 };
 
 export function SearchBar({ scope, fluid }: { scope?: SearchScope; fluid?: boolean }) {
-  const [open, setOpen] = useState(false);
+  const [panel, setPanel] = useState<"search" | "image" | "color" | null>(null);
   const [placeholder, setPlaceholder] = useState(
     scope ? scope.placeholder ?? `Search in ${scope.name}…` : PLACEHOLDERS[3],
   );
@@ -53,10 +55,10 @@ export function SearchBar({ scope, fluid }: { scope?: SearchScope; fluid?: boole
 
   useEffect(() => {
     function onClick(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+      if (ref.current && !ref.current.contains(e.target as Node)) setPanel(null);
     }
     function onKey(e: KeyboardEvent) {
-      if (e.key === "Escape") setOpen(false);
+      if (e.key === "Escape") setPanel(null);
     }
     document.addEventListener("mousedown", onClick);
     document.addEventListener("keydown", onKey);
@@ -72,7 +74,7 @@ export function SearchBar({ scope, fluid }: { scope?: SearchScope; fluid?: boole
       className={
         fluid
           ? "relative w-full"
-          : `relative mx-auto transition-[width] duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] ${open && !scope ? "w-[601px]" : "w-[480px]"}`
+          : `relative mx-auto transition-[width] duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] ${panel !== null && !scope ? "w-[601px]" : "w-[480px]"}`
       }
     >
       <div className="flex h-[54px] items-center gap-2 rounded-full bg-surface p-2 ring-1 ring-inset ring-border">
@@ -106,12 +108,16 @@ export function SearchBar({ scope, fluid }: { scope?: SearchScope; fluid?: boole
         )}
         <input
           placeholder={placeholder}
-          onFocus={() => !scope && setOpen(true)}
+          onFocus={() => !scope && setPanel("search")}
           className="min-w-0 flex-1 bg-transparent text-[14px] font-medium leading-[18px] tracking-[-0.28px] text-fg placeholder:text-fg-muted outline-none"
         />
         <button
           aria-label="Visual search"
-          className="grid h-[38px] w-[38px] shrink-0 place-items-center rounded-full text-fg-muted hover:bg-surface2 hover:text-fg"
+          onClick={() => !scope && setPanel((p) => (p === "image" ? null : "image"))}
+          className={
+            "grid h-[38px] w-[38px] shrink-0 place-items-center rounded-full hover:bg-surface2 hover:text-fg " +
+            (panel === "image" ? "bg-surface2 text-fg" : "text-fg-muted")
+          }
         >
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
             <path
@@ -124,7 +130,11 @@ export function SearchBar({ scope, fluid }: { scope?: SearchScope; fluid?: boole
         </button>
         <button
           aria-label="Color search"
-          className="grid h-[38px] w-[38px] shrink-0 place-items-center rounded-full hover:bg-surface2"
+          onClick={() => !scope && setPanel((p) => (p === "color" ? null : "color"))}
+          className={
+            "grid h-[38px] w-[38px] shrink-0 place-items-center rounded-full hover:bg-surface2 " +
+            (panel === "color" ? "bg-surface2" : "")
+          }
         >
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
             {COSMOS_DOTS.map((d, i) => (
@@ -134,7 +144,7 @@ export function SearchBar({ scope, fluid }: { scope?: SearchScope; fluid?: boole
         </button>
       </div>
 
-      {open && !scope && (
+      {panel === "search" && !scope && (
         <div
           className="absolute left-0 right-0 top-[calc(100%+8px)] z-50 flex flex-col gap-6 rounded-2xl bg-surface p-6 shadow-[0_8px_32px_rgba(0,0,0,0.4)] ring-1 ring-inset ring-border"
         >
@@ -184,6 +194,9 @@ export function SearchBar({ scope, fluid }: { scope?: SearchScope; fluid?: boole
             </Section>
         </div>
       )}
+
+      {panel === "image" && !scope && <ImageSearchPanel />}
+      {panel === "color" && !scope && <ColorSearchPanel />}
     </div>
   );
 }
