@@ -27,7 +27,7 @@ export function ColorSearchPanel() {
         {/* Bottom row */}
         <div className="flex w-full items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="flex items-center gap-1.5 rounded-full bg-surface p-2.5 ring-[0.5px] ring-inset ring-border">
+            <div className="flex items-center gap-0.5 rounded-full bg-surface p-2.5 ring-[0.5px] ring-inset ring-border">
               <span className="size-5 shrink-0 rounded-full bg-black" />
               <span className="text-[14px] font-medium uppercase leading-[18px] tracking-[-0.28px] text-fg">
                 #000000
