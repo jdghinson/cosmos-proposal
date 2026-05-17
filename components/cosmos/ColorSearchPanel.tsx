@@ -1,6 +1,6 @@
 export function ColorSearchPanel() {
   return (
-    <div className="absolute left-0 right-0 top-[calc(100%+8px)] z-50 h-[364px] overflow-hidden rounded-3xl bg-surface p-2 ring-[0.5px] ring-inset ring-border shadow-[0_1px_8px_rgba(0,0,0,0.05)]">
+    <div className="absolute left-0 right-0 top-[calc(100%+8px)] z-50 h-[364px] rounded-3xl bg-surface p-2 ring-[0.5px] ring-inset ring-border shadow-[0_1px_8px_rgba(0,0,0,0.05)]">
       <div className="flex h-full flex-col items-center gap-2">
         {/* Saturation / value square */}
         <div
@@ -16,7 +16,7 @@ export function ColorSearchPanel() {
         {/* Hue spectrum slider */}
         <div className="flex h-4 w-full shrink-0">
           <div
-            className="h-4 w-full grow rounded-full"
+            className="h-4 grow rounded-full"
             style={{
               backgroundImage:
                 "linear-gradient(in oklab 90deg, oklab(62.8% 0.225 0.126) 0%, oklab(96.8% -0.071 0.199) 16.67%, oklab(86.6% -0.234 0.179) 33.33%, oklab(90.5% -0.149 -0.039) 50%, oklab(45.2% -0.032 -0.312) 66.67%, oklab(70.2% 0.275 -0.169) 83.33%, oklab(62.8% 0.225 0.126) 100%)",
@@ -34,6 +34,7 @@ export function ColorSearchPanel() {
               </span>
             </div>
             <button
+              type="button"
               aria-label="Add color"
               className="grid size-10 shrink-0 place-items-center rounded-full text-fg ring-[0.5px] ring-inset ring-border hover:bg-surface2"
             >
@@ -42,7 +43,7 @@ export function ColorSearchPanel() {
               </svg>
             </button>
           </div>
-          <button className="grid h-10 place-items-center rounded-full bg-white px-5 text-[14px] font-medium leading-[18px] tracking-[-0.28px] text-[#0D0D0D] hover:bg-[#D4D4D4]">
+          <button type="button" className="grid h-10 place-items-center rounded-full bg-white px-5 text-[14px] font-medium leading-[18px] tracking-[-0.28px] text-[#0D0D0D] hover:bg-[#D4D4D4]">
             Search
           </button>
         </div>
