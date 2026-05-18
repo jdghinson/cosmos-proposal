@@ -440,7 +440,10 @@ export const seededAICollections: SavedCollection[] = [
     title: "Warm archival editorial",
     brief: "A warm, archival editorial for a coffee brand. Earthy, soft, type-led.",
     createdAt: Date.now() - 1000 * 60 * 60 * 24 * 2,
-    imageUrls: resultsForBrief("warm archival editorial coffee"),
+    // Deterministic seed (stable id) so SSR and client render identical
+    // imageUrls — resultsForBrief uses Date.now()+random and would cause a
+    // hydration mismatch when this module is evaluated in both runtimes.
+    imageUrls: buildResults("warm archival editorial coffee", [], hashString("seed-warm-archive")),
     source: "ai",
   },
   {
@@ -448,7 +451,7 @@ export const seededAICollections: SavedCollection[] = [
     title: "Minimal SaaS landing",
     brief: "Clean minimal tech product interfaces for a developer tool launch.",
     createdAt: Date.now() - 1000 * 60 * 60 * 24 * 6,
-    imageUrls: resultsForBrief("minimal tech product interface saas"),
+    imageUrls: buildResults("minimal tech product interface saas", [], hashString("seed-minimal-saas")),
     source: "ai",
   },
 ];
