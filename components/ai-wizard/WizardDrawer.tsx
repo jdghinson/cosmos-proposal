@@ -3,10 +3,11 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
-import { X, Sparkles, ArrowLeft } from "lucide-react";
+import { X, Sparkles, ArrowLeft, LayoutGrid } from "lucide-react";
 import { BriefStep } from "./BriefStep";
 import { GeneratingStep } from "./GeneratingStep";
 import { ResultsStep } from "./ResultsStep";
+import { CreateStep } from "./CreateStep";
 import { resultsForBrief, suggestTitle } from "@/lib/mock-data";
 import { useCollections } from "@/lib/collections-store";
 import { useWizard } from "@/lib/wizard-store";
@@ -28,7 +29,7 @@ const initial: WizardState = {
 
 export function WizardDrawer() {
   const router = useRouter();
-  const { isOpen, closeWizard } = useWizard();
+  const { isOpen, mode, closeWizard } = useWizard();
   const { addCollection } = useCollections();
   const [step, setStep] = useState<Step>("brief");
   const [state, setState] = useState<WizardState>(initial);
@@ -112,6 +113,23 @@ export function WizardDrawer() {
     router.push(`/collection/${id}`);
   }
 
+  function createManual() {
+    const id = "manual-" + Date.now().toString(36);
+    addCollection({
+      id,
+      title: state.name.trim() || "Untitled collection",
+      brief: "",
+      createdAt: Date.now(),
+      imageUrls: [],
+      source: "manual",
+      isPrivate: state.isPrivate,
+      collaborators: state.collaborators,
+    });
+    closeWizard();
+    setTimeout(reset, 350);
+    router.push(`/collection/${id}`);
+  }
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -133,26 +151,35 @@ export function WizardDrawer() {
             transition={{ type: "tween", duration: 0.5, ease: [0.32, 0.72, 0, 1] }}
             className="fixed right-0 top-0 z-50 flex h-full w-[85vw] max-w-[1180px] flex-col bg-bg shadow-[0_0_64px_rgba(0,0,0,0.6)] ring-1 ring-inset ring-border"
             role="dialog"
-            aria-label="New AI Collection"
+            aria-label={mode === "create" ? "New collection" : "New AI Collection"}
           >
             <header className="flex shrink-0 items-center justify-between gap-3 border-b border-border px-5 py-4">
               <div className="flex items-center gap-2">
-                {step === "results" || step === "generating" ? (
-                  <button
-                    onClick={() => setStep("brief")}
-                    className="grid h-8 w-8 place-items-center rounded-full text-fg-muted hover:bg-surface hover:text-fg transition-[background-color,color,transform] duration-150 ease-out active:scale-[0.92]"
-                    aria-label="Back"
-                  >
-                    <ArrowLeft size={15} />
-                  </button>
-                ) : null}
-                <span className="flex items-center gap-2 text-[13px] font-medium tracking-[-0.26px] text-fg">
-                  <Sparkles size={14} className="text-fg" strokeWidth={1.75} />
-                  New AI Collection
-                </span>
-                <span className="rounded-full bg-fg/10 px-1.5 py-0.5 text-[10px] uppercase tracking-wider text-fg-muted">
-                  Premium
-                </span>
+                {mode === "create" ? (
+                  <span className="flex items-center gap-2 text-[13px] font-medium tracking-[-0.26px] text-fg">
+                    <LayoutGrid size={14} className="text-fg" strokeWidth={1.75} />
+                    New collection
+                  </span>
+                ) : (
+                  <>
+                    {step === "results" || step === "generating" ? (
+                      <button
+                        onClick={() => setStep("brief")}
+                        className="grid h-8 w-8 place-items-center rounded-full text-fg-muted hover:bg-surface hover:text-fg transition-[background-color,color,transform] duration-150 ease-out active:scale-[0.92]"
+                        aria-label="Back"
+                      >
+                        <ArrowLeft size={15} />
+                      </button>
+                    ) : null}
+                    <span className="flex items-center gap-2 text-[13px] font-medium tracking-[-0.26px] text-fg">
+                      <Sparkles size={14} className="text-fg" strokeWidth={1.75} />
+                      New AI Collection
+                    </span>
+                    <span className="rounded-full bg-fg/10 px-1.5 py-0.5 text-[10px] uppercase tracking-wider text-fg-muted">
+                      Premium
+                    </span>
+                  </>
+                )}
               </div>
               <button
                 onClick={handleClose}
@@ -165,7 +192,19 @@ export function WizardDrawer() {
 
             <div className="relative flex-1 overflow-y-auto">
               <AnimatePresence mode="wait">
-                {step === "brief" && (
+                {mode === "create" && (
+                  <motion.div
+                    key="create"
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -6, transition: { duration: 0.16 } }}
+                    transition={{ duration: 0.22 }}
+                    className="mx-auto max-w-[560px] px-6 py-8"
+                  >
+                    <CreateStep state={state} setState={setState} onSubmit={createManual} />
+                  </motion.div>
+                )}
+                {mode === "ai" && step === "brief" && (
                   <motion.div
                     key="brief"
                     initial={{ opacity: 0, y: 6 }}
@@ -177,7 +216,7 @@ export function WizardDrawer() {
                     <BriefStep state={state} setState={setState} onSubmit={startGenerate} />
                   </motion.div>
                 )}
-                {step === "generating" && (
+                {mode === "ai" && step === "generating" && (
                   <motion.div
                     key="generating"
                     initial={{ opacity: 0 }}
@@ -189,7 +228,7 @@ export function WizardDrawer() {
                     <GeneratingStep state={state} />
                   </motion.div>
                 )}
-                {step === "results" && (
+                {mode === "ai" && step === "results" && (
                   <motion.div
                     key="results"
                     initial={{ opacity: 0, y: 6 }}
