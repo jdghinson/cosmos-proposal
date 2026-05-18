@@ -8,6 +8,9 @@ import { WizardModal } from "@/components/ai-wizard/WizardModal";
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"
+  ),
   title: "Cosmos — AI Collection",
   description: "Prototype for Cosmos AI brief-to-collection and Figma plugin.",
 };
