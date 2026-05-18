@@ -2,16 +2,12 @@
 
 import { LayoutGrid, Square, Upload, Sparkles } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
-import { useCollections } from "@/lib/collections-store";
 import { useWizard } from "@/lib/wizard-store";
 
 export function CreateDropdown() {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
-  const router = useRouter();
-  const { addCollection } = useCollections();
   const { openWizard } = useWizard();
 
   useEffect(() => {
@@ -28,20 +24,6 @@ export function CreateDropdown() {
       document.removeEventListener("keydown", onKey);
     };
   }, []);
-
-  function createBlankCollection() {
-    const id = "manual-" + Date.now().toString(36);
-    addCollection({
-      id,
-      title: "Vheni",
-      brief: "minimal product",
-      createdAt: Date.now(),
-      imageUrls: [],
-      source: "manual",
-    });
-    setOpen(false);
-    router.push(`/collection/${id}`);
-  }
 
   return (
     <div ref={ref} className="relative">
@@ -65,7 +47,10 @@ export function CreateDropdown() {
               icon={<LayoutGrid size={16} strokeWidth={1.6} />}
               title="Collection"
               subtitle="A collection of elements"
-              onClick={createBlankCollection}
+              onClick={() => {
+                setOpen(false);
+                openWizard("create");
+              }}
             />
             <DropdownItem icon={<Square size={16} strokeWidth={1.6} />} title="Element" subtitle="Media, URL, or note" />
             <DropdownItem icon={<Upload size={16} strokeWidth={1.6} />} title="Import" subtitle="From Pinterest, Are.na or Tumblr" />

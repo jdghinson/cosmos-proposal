@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   Contrast,
@@ -15,7 +14,6 @@ import {
   Sun,
   Users,
 } from "lucide-react";
-import { useCollections } from "@/lib/collections-store";
 import { useWizard } from "@/lib/wizard-store";
 import { UserAvatar } from "./UserAvatar";
 
@@ -102,22 +100,11 @@ export function NavMenu({
   const [theme, setTheme] = useState("system");
   const [grid, setGrid] = useState("md");
   const ref = useRef<HTMLDivElement>(null);
-  const router = useRouter();
-  const { addCollection } = useCollections();
   const { openWizard } = useWizard();
 
   function createCollection() {
-    const id = "manual-" + Date.now().toString(36);
-    addCollection({
-      id,
-      title: "Untitled collection",
-      brief: "",
-      createdAt: Date.now(),
-      imageUrls: [],
-      source: "manual",
-    });
     setOpen(false);
-    router.push(`/collection/${id}`);
+    openWizard("create");
   }
 
   function createAICollection() {
