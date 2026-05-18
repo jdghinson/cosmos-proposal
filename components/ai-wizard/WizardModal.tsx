@@ -124,7 +124,8 @@ export function WizardModal() {
   // ---- AI flow ----
   function startGenerate() {
     const imgs = resultsForBrief(state.brief, [...state.keywords, ...state.projectTypes]);
-    const name = state.name.trim() || suggestTitle(state.brief);
+    // BriefStep guarantees a non-empty name before calling this.
+    const name = state.name.trim();
     setState((s) => ({ ...s, imageUrls: imgs, selected: new Set(imgs), name }));
     setStep("ai-generating");
     setTimeout(() => setStep("ai-results"), 2500);

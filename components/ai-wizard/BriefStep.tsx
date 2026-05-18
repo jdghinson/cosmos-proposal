@@ -22,6 +22,7 @@ type Props = {
 export function BriefStep({ state, setState, onSubmit }: Props) {
   const [expanded, setExpanded] = useState(false);
   const [placeholder, setPlaceholder] = useState(PLACEHOLDERS[0]);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     let i = 0;
@@ -33,6 +34,7 @@ export function BriefStep({ state, setState, onSubmit }: Props) {
   }, []);
 
   function setName(name: string) {
+    if (error && name.trim()) setError(false);
     setState((s) => ({ ...s, name }));
   }
 
@@ -61,6 +63,15 @@ export function BriefStep({ state, setState, onSubmit }: Props) {
 
   const canSubmit = state.brief.trim().length > 0;
 
+  function handleSubmit() {
+    if (!state.name.trim()) {
+      setError(true);
+      return;
+    }
+    setError(false);
+    onSubmit();
+  }
+
   return (
     <div className="flex flex-col gap-5">
       <div className="text-center">
@@ -71,6 +82,15 @@ export function BriefStep({ state, setState, onSubmit }: Props) {
           className="w-full bg-transparent text-center text-[28px] font-medium tracking-[-0.56px] text-fg outline-none placeholder:text-fg-subtle"
         />
       </div>
+
+      {error && (
+        <p
+          role="alert"
+          className="-mt-2 text-center text-[12px] leading-[14px] tracking-[-0.24px] text-[#EF7759]"
+        >
+          Collection name is required
+        </p>
+      )}
 
       <Section label="Brief">
         <textarea
@@ -116,7 +136,7 @@ export function BriefStep({ state, setState, onSubmit }: Props) {
 
       <div className="sticky bottom-0 -mx-5 -mb-6 mt-2 border-t border-border bg-bg/95 px-5 pb-6 pt-4 backdrop-blur">
         <button
-          onClick={onSubmit}
+          onClick={handleSubmit}
           disabled={!canSubmit}
           className="flex w-full items-center justify-center gap-1.5 rounded-full bg-fg px-4 py-3 text-[14px] font-medium tracking-[-0.28px] text-[#0D0D0D] disabled:cursor-not-allowed disabled:opacity-30 active:scale-[0.97] transition-transform duration-150 ease-out"
         >
