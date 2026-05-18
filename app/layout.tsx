@@ -3,7 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { CollectionsProvider } from "@/lib/collections-store";
 import { WizardProvider } from "@/lib/wizard-store";
-import { WizardDrawer } from "@/components/ai-wizard/WizardDrawer";
+import { WizardModal } from "@/components/ai-wizard/WizardModal";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
@@ -19,7 +19,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <CollectionsProvider>
           <WizardProvider>
             {children}
-            <WizardDrawer />
+            <WizardModal />
           </WizardProvider>
         </CollectionsProvider>
       </body>

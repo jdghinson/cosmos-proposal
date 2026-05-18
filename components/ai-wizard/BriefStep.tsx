@@ -70,7 +70,6 @@ export function BriefStep({ state, setState, onSubmit }: Props) {
           placeholder="New collection"
           className="w-full bg-transparent text-center text-[28px] font-medium tracking-[-0.56px] text-fg outline-none placeholder:text-fg-subtle"
         />
-        <p className="mt-1 text-[12px] text-fg-muted">Name your collection</p>
       </div>
 
       <Section label="Brief">
@@ -102,8 +101,6 @@ export function BriefStep({ state, setState, onSubmit }: Props) {
           </div>
         )}
       </Section>
-
-      <div className="h-px bg-border" />
 
       <PrivateToggle isPrivate={state.isPrivate} onToggle={togglePrivate} />
 
