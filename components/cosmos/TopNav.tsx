@@ -117,7 +117,10 @@ export function TopNav({ searchScope }: { searchScope?: SearchScope } = {}) {
   const isProfile = pathname === "/profile";
 
   return (
-    <div className="relative">
+    // z-30 establishes a stacking layer for the nav's dropdowns (NavMenu,
+    // CreateDropdown, FeedPill) above page body content like the carousel
+    // arrows (z-10) and Back-to-top (z-20), but below app modals (z-40/50).
+    <div className="relative z-30">
       {/* ≥1024 (lg & xl). xl shows the 3 feed links; lg collapses them into a dropdown pill. */}
       <div className="relative hidden items-center justify-between px-8 py-6 lg:flex">
         <div className="relative z-10 flex items-center gap-1">

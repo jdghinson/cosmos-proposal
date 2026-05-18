@@ -6,6 +6,7 @@ import { CategoryChips } from "@/components/cosmos/CategoryChips";
 import { SelectedRow } from "@/components/cosmos/SelectedRow";
 import { ExploreGrid } from "@/components/cosmos/ExploreGrid";
 import { PluginEntryBanner } from "@/components/cosmos/PluginEntryBanner";
+import { BackToTop } from "@/components/cosmos/BackToTop";
 import { Suspense, useEffect } from "react";
 
 function ExploreInner() {
@@ -26,6 +27,7 @@ function ExploreInner() {
       <SelectedRow highlightId={highlight} />
       <ExploreGrid />
       <PluginEntryBanner />
+      <BackToTop />
     </main>
   );
 }
