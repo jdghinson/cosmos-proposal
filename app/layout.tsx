@@ -12,8 +12,8 @@ export const metadata: Metadata = {
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"
   ),
-  title: "Cosmos — AI Collection",
-  description: "Prototype for Cosmos AI brief-to-collection and Figma plugin.",
+  title: "Cosmos — Moodboard",
+  description: "Prototype for Cosmos Moodboard and the Figma plugin.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

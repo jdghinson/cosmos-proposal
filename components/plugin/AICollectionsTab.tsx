@@ -164,7 +164,7 @@ function CollectionList({
   return (
     <div className="flex h-full flex-col">
       <div className="border-b border-border bg-surface px-3 py-2.5 text-[11px] uppercase tracking-wider text-fg-muted">
-        Your AI Collections
+        Your Moodboards
       </div>
       <div className="flex-1 overflow-y-auto">
         <button
@@ -176,7 +176,7 @@ function CollectionList({
           </div>
           <div className="flex-1">
             <div className="flex items-center gap-1.5 text-[12px] font-medium text-fg">
-              New AI Collection
+              New Moodboard
               <Sparkles size={11} className="text-fg-muted" />
             </div>
             <div className="text-[11px] text-fg-muted">Generate from a brief, without leaving Figma.</div>
@@ -231,7 +231,7 @@ function CollectionDetail({
         <div className="min-w-0 flex-1">
           <div className="truncate text-[12px] font-medium text-fg">{collection.title}</div>
           <div className="flex items-center gap-1.5 text-[10px] text-fg-muted">
-            <span>{collection.imageUrls.length} elements · AI</span>
+            <span>{collection.imageUrls.length} elements · Moodboard</span>
             {collection.isPrivate && (
               <span className="flex items-center gap-0.5">
                 · <Lock size={9} strokeWidth={1.75} /> Private
@@ -294,7 +294,7 @@ function NewBriefView({
         >
           <ArrowLeft size={13} />
         </button>
-        <div className="flex-1 text-[12px] font-medium text-fg">New AI Collection</div>
+        <div className="flex-1 text-[12px] font-medium text-fg">New Moodboard</div>
         <span className="rounded-pill bg-fg/10 px-1.5 py-0.5 text-[9px] uppercase tracking-wider text-fg">
           Premium
         </span>

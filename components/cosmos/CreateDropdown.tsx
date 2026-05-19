@@ -69,7 +69,7 @@ export function CreateDropdown() {
               />
               <DropdownItem
                 icon={<Sparkles size={20} strokeWidth={1.75} />}
-                title="AI Collection"
+                title="Moodboard"
                 subtitle="Generate from a brief"
                 isNew
                 spinIcon

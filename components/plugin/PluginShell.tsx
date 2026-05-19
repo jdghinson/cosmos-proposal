@@ -18,7 +18,7 @@ export function PluginShell() {
 
   useEffect(() => {
     if (fromCollection) {
-      toaster.push("Opened AI Collection from web.");
+      toaster.push("Opened Moodboard from web.");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fromCollection]);
@@ -80,7 +80,7 @@ function TabBar({ tab, setTab }: { tab: Tab; setTab: (t: Tab) => void }) {
   return (
     <div className="flex gap-1 border-b border-border bg-surface px-2 pt-2">
       <TabButton active={tab === "search"} onClick={() => setTab("search")}>Search</TabButton>
-      <TabButton active={tab === "ai"} onClick={() => setTab("ai")}>AI Collections</TabButton>
+      <TabButton active={tab === "ai"} onClick={() => setTab("ai")}>Moodboards</TabButton>
     </div>
   );
 }

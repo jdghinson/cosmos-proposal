@@ -178,7 +178,7 @@ export function NavMenu({
                     onClick={createCollection}
                   />
                   <Row
-                    label="AI collection"
+                    label="Moodboard"
                     icon={<Sparkles size={20} strokeWidth={1.75} />}
                     onClick={createAICollection}
                     spinOnHover

@@ -34,6 +34,17 @@ const initial: WizardState = {
 
 const EASE = [0.2, 0.6, 0.2, 1] as const;
 
+// Signature of the only inputs that affect AI generation. Order-independent
+// and normalized so reordering chips/keywords or whitespace isn't a "change".
+// Name, collaborators and privacy are deliberately excluded.
+function genKey(s: WizardState): string {
+  return [
+    s.brief.trim().toLowerCase(),
+    [...s.projectTypes].sort().join(","),
+    [...s.keywords].map((k) => k.trim().toLowerCase()).sort().join(","),
+  ].join("|");
+}
+
 export function WizardModal() {
   const router = useRouter();
   const { isOpen, mode, closeWizard } = useWizard();
@@ -42,6 +53,10 @@ export function WizardModal() {
   const [step, setStep] = useState<Step>("ai-brief");
   const [state, setState] = useState<WizardState>(initial);
   const restoreFocusRef = useRef<HTMLElement | null>(null);
+  // Inputs (brief + details) that produced the current imageUrls. Lets us keep
+  // the same generation when the user goes back and only edited name/privacy/
+  // collaborators, and re-generate only when the brief or details change.
+  const generatedKeyRef = useRef<string | null>(null);
 
   // Initialise the step machine whenever the modal opens.
   useEffect(() => {
@@ -74,6 +89,7 @@ export function WizardModal() {
   function reset() {
     setState(initial);
     setStep(mode === "create" ? "create-form" : "ai-brief");
+    generatedKeyRef.current = null;
   }
 
   function handleClose() {
@@ -123,9 +139,19 @@ export function WizardModal() {
 
   // ---- AI flow ----
   function startGenerate() {
-    const imgs = resultsForBrief(state.brief, [...state.keywords, ...state.projectTypes]);
+    const key = genKey(state);
     // BriefStep guarantees a non-empty name before calling this.
     const name = state.name.trim();
+    if (state.imageUrls.length > 0 && generatedKeyRef.current === key) {
+      // Brief & details unchanged since the last generation — keep the exact
+      // same collection (and the user's current selection). Name, privacy and
+      // collaborator edits don't regenerate, so skip the generating step too.
+      setState((s) => ({ ...s, name }));
+      setStep("ai-results");
+      return;
+    }
+    const imgs = resultsForBrief(state.brief, [...state.keywords, ...state.projectTypes]);
+    generatedKeyRef.current = key;
     setState((s) => ({ ...s, imageUrls: imgs, selected: new Set(imgs), name }));
     setStep("ai-generating");
     setTimeout(() => setStep("ai-results"), 2500);
@@ -138,6 +164,9 @@ export function WizardModal() {
         ...state.keywords,
         ...state.projectTypes,
       ]);
+      // The regenerated set becomes the current one for this brief+details,
+      // so going back/forward keeps it until the inputs actually change.
+      generatedKeyRef.current = genKey(state);
       setState((s) => ({ ...s, imageUrls: imgs, selected: new Set(imgs) }));
       setStep("ai-results");
     }, 1800);
@@ -190,7 +219,7 @@ export function WizardModal() {
               transition={{ duration: 0.22, ease: EASE }}
               role="dialog"
               aria-modal="true"
-              aria-label={mode === "create" ? "New collection" : "New AI Collection"}
+              aria-label={mode === "create" ? "New collection" : "New Moodboard"}
               onClick={(e) => e.stopPropagation()}
               style={{ boxShadow: "#F7F5F31F 0 0 0 0.5px, rgba(0,0,0,0.05) 0 1px 8px" }}
               className={
@@ -321,7 +350,7 @@ function Header({
 }) {
   let title = "New collection";
   let subtitle: string | null = null;
-  if (step === "ai-brief") title = "New AI Collection";
+  if (step === "ai-brief") title = "New Moodboard";
   if (step === "ai-generating") title = "Generating";
   if (step === "create-picker") {
     title = "Suggested elements";
