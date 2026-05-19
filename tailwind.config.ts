@@ -50,10 +50,15 @@ const config: Config = {
           "0%": { opacity: "0", transform: "translateY(4px)" },
           "100%": { opacity: "1", transform: "translateY(0)" },
         },
+        spin3d: {
+          "0%": { transform: "rotateY(0deg)" },
+          "100%": { transform: "rotateY(360deg)" },
+        },
       },
       animation: {
         shimmer: "shimmer 2.2s linear infinite",
         "fade-in": "fadeIn 250ms cubic-bezier(0.2, 0.6, 0.2, 1) forwards",
+        "spin-3d": "spin3d 600ms cubic-bezier(0.2, 0.6, 0.2, 1)",
       },
     },
   },

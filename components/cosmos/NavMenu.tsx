@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   Contrast,
-  LayoutGrid,
   LogOut,
   MessageSquareMore,
   Moon,
@@ -16,6 +15,7 @@ import {
 } from "lucide-react";
 import { useWizard } from "@/lib/wizard-store";
 import { UserAvatar } from "./UserAvatar";
+import { CollectionIcon } from "./CreateMenuIcons";
 
 function MenuIcon() {
   return (
@@ -30,20 +30,37 @@ function Row({
   label,
   icon,
   onClick,
+  spinOnHover = false,
 }: {
   label: string;
   icon: React.ReactNode;
   onClick?: () => void;
+  spinOnHover?: boolean;
 }) {
   return (
     <button
       onClick={onClick}
-      className="flex items-center justify-between gap-2 rounded-2xl px-4 py-3 text-left hover:bg-surface2 active:scale-[0.99] transition-[background-color,transform] duration-150 ease-out"
+      className={
+        "flex items-center justify-between gap-2 rounded-2xl px-4 py-3 text-left hover:bg-surface2 active:scale-[0.99] transition-[background-color,transform] duration-150 ease-out" +
+        (spinOnHover ? " group" : "")
+      }
     >
       <span className="text-[14px] font-medium leading-[18px] tracking-[-0.28px] text-fg">
         {label}
       </span>
-      <span className="grid h-6 w-6 shrink-0 place-items-center text-fg">{icon}</span>
+      {/* perspective on the wrapper makes the inner rotateY read as a real
+          3D coin-flip rather than a flat horizontal squash */}
+      <span className="grid h-6 w-6 shrink-0 place-items-center text-fg [perspective:400px]">
+        <span
+          className={
+            spinOnHover
+              ? "group-hover:animate-spin-3d motion-reduce:group-hover:animate-none"
+              : undefined
+          }
+        >
+          {icon}
+        </span>
+      </span>
     </button>
   );
 }
@@ -157,13 +174,14 @@ export function NavMenu({
                 <div className="flex flex-col">
                   <Row
                     label="Create collection"
-                    icon={<LayoutGrid size={20} strokeWidth={1.75} />}
+                    icon={<CollectionIcon size={20} />}
                     onClick={createCollection}
                   />
                   <Row
                     label="AI collection"
                     icon={<Sparkles size={20} strokeWidth={1.75} />}
                     onClick={createAICollection}
+                    spinOnHover
                   />
                 </div>
 

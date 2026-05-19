@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import { ChevronDown, Sparkles, X } from "lucide-react";
 import { projectTypes, type ProjectType, type Collaborator } from "@/lib/mock-data";
 import { Section, PrivateToggle, CollaboratorsField } from "./fields";
@@ -23,6 +24,7 @@ export function BriefStep({ state, setState, onSubmit }: Props) {
   const [expanded, setExpanded] = useState(false);
   const [placeholder, setPlaceholder] = useState(PLACEHOLDERS[0]);
   const [error, setError] = useState(false);
+  const detailsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     let i = 0;
@@ -32,6 +34,20 @@ export function BriefStep({ state, setState, onSubmit }: Props) {
     }, 3500);
     return () => clearInterval(id);
   }, []);
+
+  // Close the "Add details" popover on outside click. No Escape handler here:
+  // WizardModal owns Escape (closes the whole modal) and we don't want a
+  // popover-level listener fighting it.
+  useEffect(() => {
+    if (!expanded) return;
+    function onDown(e: MouseEvent) {
+      if (detailsRef.current && !detailsRef.current.contains(e.target as Node)) {
+        setExpanded(false);
+      }
+    }
+    document.addEventListener("mousedown", onDown);
+    return () => document.removeEventListener("mousedown", onDown);
+  }, [expanded]);
 
   function setName(name: string) {
     if (error && name.trim()) setError(false);
@@ -101,25 +117,37 @@ export function BriefStep({ state, setState, onSubmit }: Props) {
           className="w-full resize-none rounded-xl bg-surface px-3.5 py-3 text-[14px] leading-relaxed text-fg outline-none placeholder:text-fg-subtle ring-1 ring-inset ring-border focus:ring-fg/30"
         />
         <div className="mt-2 flex items-center justify-between">
-          <button
-            onClick={() => setExpanded((v) => !v)}
-            className="flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[12px] text-fg-muted hover:bg-surface hover:text-fg"
-          >
-            Add details
-            <ChevronDown size={13} className={"transition-transform duration-200 ease-out " + (expanded ? "rotate-180" : "")} />
-          </button>
+          <div ref={detailsRef} className="relative">
+            <button
+              type="button"
+              onClick={() => setExpanded((v) => !v)}
+              aria-expanded={expanded}
+              className="flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[12px] text-fg-muted hover:bg-surface hover:text-fg"
+            >
+              Add details
+              <ChevronDown size={13} className={"transition-transform duration-200 ease-out " + (expanded ? "rotate-180" : "")} />
+            </button>
+            <AnimatePresence>
+              {expanded && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.96, y: -4 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.96, y: -4, transition: { duration: 0.12, ease: [0.2, 0.6, 0.2, 1] } }}
+                  transition={{ duration: 0.16, ease: [0.2, 0.6, 0.2, 1] }}
+                  style={{ transformOrigin: "top left" }}
+                  className="absolute left-0 top-[calc(100%+8px)] z-20 w-[320px] max-w-[calc(100vw-3rem)] space-y-4 rounded-xl bg-surface p-3 shadow-[0_8px_32px_rgba(0,0,0,0.45)] ring-1 ring-inset ring-border"
+                >
+                  <Refinements state={state} setState={setState} />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
           {state.keywords.length + state.projectTypes.length > 0 && (
             <span className="text-[11px] text-fg-subtle">
               {state.keywords.length + state.projectTypes.length} refinements
             </span>
           )}
         </div>
-
-        {expanded && (
-          <div className="mt-3 space-y-4 rounded-xl bg-surface/60 p-3 ring-1 ring-inset ring-border">
-            <Refinements state={state} setState={setState} />
-          </div>
-        )}
       </Section>
 
       <PrivateToggle isPrivate={state.isPrivate} onToggle={togglePrivate} />
