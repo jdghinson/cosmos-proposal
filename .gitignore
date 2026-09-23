@@ -10,3 +10,4 @@ dist
 .agents/
 skills-lock.json
 tsconfig.tsbuildinfo
+docs/
